@@ -26,7 +26,14 @@ function rtsUnit:addToCanvas(unit, canvas)
 
     -- Drawing the circle.
     canvas:renderTo(function()
-        love.graphics.circle("fill", unit.x, unit.y, 10)
+        if unit.selected then
+            love.graphics.setColor(1, .5, .5, 1)
+            love.graphics.circle("fill", unit.x, unit.y, 10)
+        else 
+            love.graphics.setColor(1, 1, 1., 1)
+            love.graphics.circle("fill", unit.x, unit.y, 10)
+        end
+        love.graphics.setColor(1, 1, 1., 1)
     end)
 end
 
@@ -48,9 +55,7 @@ function rtsUnit:update(unit, dt)
     -- Moving in the direction of the target
     direction = math.atan((unit.targetY - unit.y) / (unit.targetX - unit.x))
     if unit.targetX - unit.x < 0 then
-        print("dir was " , direction)
         direction = direction + math.pi
-        print("now is ", direction)
     end
 
     unit.x = unit.x + unit.speed * math.cos(direction) * dt

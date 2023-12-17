@@ -20,6 +20,13 @@ function rtsWorld:new()
     -- Units Data
     world.units = {}
 
+    -- Selection rectangle
+    world.showSelection = false
+    world.selStartX = 0
+    world.selStartY = 0
+    world.selW = 0
+    world.selH = 0
+
     return world
 end
 
@@ -38,6 +45,17 @@ function rtsWorld:getImage(world)
     -- Drawing Units
     for i = 1, #world.units do
         rtsUnit:addToCanvas(world.units[i], canvas)
+    end
+
+    -- Showing the rectangle on top of the units:
+    if world.showSelection then
+        canvas:renderTo(function() 
+            love.graphics.setColor(1, 0, 0., 0.1)
+            love.graphics.rectangle("fill", world.selStartX, world.selStartY, world.selW, world.selH)
+            love.graphics.setColor(1, 0, 0., 1)
+            love.graphics.rectangle("line", world.selStartX, world.selStartY, world.selW, world.selH)
+            love.graphics.setColor(1, 1, 1., 1)
+        end)
     end
 
     -- overriding the visible world content with the world image, shifted.
@@ -75,6 +93,20 @@ function rtsWorld:moveOffset(world, moveX, moveY)
     world.offsetY = world.offsetY + moveY
 end
 
+-- Adding rectangle if present
+function rtsWorld:showSelection(world, startX, startY, endX, endY)
+    world.showSelection = true
+    world.selStartX = startX - world.offsetX
+    world.selStartY = startY - world.offsetY
+    world.selW = endX - startX
+    world.selH = endY - startY
+end
+
+function rtsWorld:hideSelection(world)
+    world.showSelection = false
+end
+
+
 -- Unit Handling
 
 function rtsWorld:createUnit(world, relativeX, relativeY)
@@ -84,7 +116,7 @@ end
 
 function rtsWorld:selectUnits(world, startX, startY, endX, endY)
     for i = 1, #world.units do
-        if world.units[i].x > startX and world.units[i].x < endX and world.units[i].y > startY and world.units[i].y < endY then
+        if world.units[i].x > startX - world.offsetX and world.units[i].x < endX - world.offsetX and world.units[i].y > startY - world.offsetY and world.units[i].y < endY - world.offsetY then
             world.units[i].selected = true
         else
             world.units[i].selected = false
