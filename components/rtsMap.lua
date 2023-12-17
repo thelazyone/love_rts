@@ -1,3 +1,5 @@
+-- The world map. Loads an image and displays it as imageData for the world to generate
+
 local rtsMap = {}
 
 -- Creates the new rts map, given size and base image.
