@@ -21,7 +21,6 @@ rtsWorld.selStartY = 0
 rtsWorld.selW = 0
 rtsWorld.selH = 0
 
-
 -- returns the global canvas
 function rtsWorld.getImage(self, world)
 
@@ -61,14 +60,11 @@ function rtsWorld.getImage(self, world)
         self.map.w,
         self.map.h)
 
-    outImage = love.graphics.newImage(visibleWorld)
-    return outImage
-
+    return love.graphics.newImage(visibleWorld)
 end
 
 -- Update function
 function rtsWorld.update(self, dt)
-
 
     -- Moving units, checking for collision if necessary.
     -- This has a N^2 complexity and is NOT recommended, however what
@@ -94,6 +90,7 @@ function rtsWorld.update(self, dt)
         end
 
         if isCollision == false then
+
             -- Updating the movement
             currentUnit.x = nextX
             currentUnit.y = nextY
@@ -110,10 +107,16 @@ function rtsWorld.setOffset(self, newX, newY)
     self.offsetY = newY
 end
 
+-- Sets moves the Offset (to move the camera.)
 function rtsWorld.moveOffset(self, moveX, moveY)
     self.offsetX = self.offsetX + moveX
     self.offsetY = self.offsetY + moveY
 end
+
+
+-- #########################################
+-- Selection Rectangle
+-- #########################################
 
 -- Adding rectangle if present
 function rtsWorld.showSelection(self, startX, startY, endX, endY)
@@ -124,17 +127,22 @@ function rtsWorld.showSelection(self, startX, startY, endX, endY)
     self.selH = endY - startY
 end
 
+-- Hides the bound rect
 function rtsWorld.hideSelection(self)
     self.isSelectionVisible = false
 end
 
 
+-- #########################################
 -- Unit Handling
+-- #########################################
 
+-- Adds a new unit in the list.
 function rtsWorld.createUnit(self, relativeX, relativeY)
     table.insert(self.units, rtsUnit:new(relativeX - self.offsetX, relativeY - self.offsetY))
 end
 
+-- Selects units within a bound rect
 function rtsWorld.selectUnits(self, startX, startY, endX, endY)
     for i = 1, #self.units do
         local startXLocal = math.min(startX, endX) - self.offsetX
@@ -157,11 +165,11 @@ function rtsWorld.selectUnits(self, startX, startY, endX, endY)
 end
 
 
+-- Issues a move command to all the selected units.
 function rtsWorld.moveSelectedUnitsTo(self, targetX, targetY)
     for i = 1, #self.units do
         if self.units[i].selected then
-            self.units[i]:setTarget(targetX - self.offsetX, targetY - self.offsetY)
-            self.units[i]:commandMove()
+            self.units[i]:commandMove(targetX - self.offsetX, targetY - self.offsetY)
         end
     end
 end

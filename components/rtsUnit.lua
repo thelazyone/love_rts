@@ -42,6 +42,10 @@ function rtsUnit:new(x, y)
 end
 
 
+-- ##############################################
+-- Graphics
+-- ##############################################
+
 -- Static function. The sprite is a circle
 function rtsUnit.addToCanvas(self, canvas)
     -- Drawing the circle.
@@ -58,12 +62,13 @@ function rtsUnit.addToCanvas(self, canvas)
 end
 
 
-function rtsUnit.setTarget(self, targetX, targetY)
-    self.targetX = targetX
-    self.targetY = targetY
-end    
+-- ##############################################
+-- Intelligence
+-- ##############################################
 
-
+-- When asked, predicts the next move in xy that the unit would do.
+-- This is necessary to the rtsWorld, which then handles collisions of sort
+-- Returns a pair of x and y
 function rtsUnit.getNextMove(self, dt)
 
     if self.state == "idle" then -- nothing to do
@@ -104,11 +109,15 @@ end
 -- This should handle potential forbidden state changes.
 -- ##############################################
 
-function rtsUnit.commandMove(self)
-    print ("Sent command Move")
+-- Move interrupts any other action and can be issued from any state
+function rtsUnit.commandMove(self, targetX, targetY)
+    print ("Sent command Move to ", targetX, targetY)
+    self.targetX = targetX
+    self.targetY = targetY
     self.state = "moving"
 end
 
+-- Stop can be issued from any state
 function rtsUnit.commandStop(self)
     print ("Sent command Stop")
     self.state = "idle"
