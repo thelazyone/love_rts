@@ -69,7 +69,6 @@ end
 -- Update function
 function rtsWorld.update(self, dt)
 
-    local minDistThreshold = 1
 
     -- Moving units, checking for collision if necessary.
     -- This has a N^2 complexity and is NOT recommended, however what
@@ -79,43 +78,28 @@ function rtsWorld.update(self, dt)
     for i = 1, #self.units do
 
         local currentUnit = self.units[i]
+        local nextX, nextY = currentUnit:getNextMove(dt)
 
-        if currentUnit.isActive then -- This is not a great way to go, but LOVE2D has no "continue" statement
-            -- If too close to the target, stopping.
-            local dist = (currentUnit.targetX - currentUnit.x)^2 + math.abs(currentUnit.targetY - currentUnit.y)^2
-            if dist < (minDistThreshold * currentUnit.speed * dt) ^ 2 then
-                currentUnit.isActive = false
-            end
-
-            -- Moving in the direction of the target
-            direction = math.atan((currentUnit.targetY - currentUnit.y) / (currentUnit.targetX - currentUnit.x))
-            if currentUnit.targetX - currentUnit.x < 0 then
-                direction = direction + math.pi
-            end
-
-            -- Checking if the position doesn't collide with others, in that case not moving.
-            local newUnitX = currentUnit.x + currentUnit.speed * math.cos(direction) * dt
-            local newUnitY = currentUnit.y + currentUnit.speed * math.sin(direction) * dt
-            local isCollision = false
-            for j = 1, #self.units do
-                if not(i == j) and (newUnitX - self.units[j].x)^2+(newUnitY - self.units[j].y)^2 < (2*currentUnit.radius)^2 then
-                    isCollision = true
-                    currentUnit.frustration = currentUnit.frustration + dt
-                    if currentUnit.frustration > currentUnit.patience then
-                        print("unit got frustrated!")
-                        currentUnit.isActive = false
-                    end
+        -- Checking if the position doesn't collide with others, in that case not moving.
+        local isCollision = false
+        for j = 1, #self.units do
+            if not(i == j) and (nextX - self.units[j].x)^2+(nextY - self.units[j].y)^2 < (2*currentUnit.radius)^2 then
+                isCollision = true
+                currentUnit.frustration = currentUnit.frustration + dt
+                if currentUnit.frustration > currentUnit.patience then
+                    print("unit got frustrated!")
+                    currentUnit:commandStop()
                 end
             end
+        end
 
-            if isCollision == false then
-                -- Updating the movement
-                currentUnit.x = newUnitX
-                currentUnit.y = newUnitY
+        if isCollision == false then
+            -- Updating the movement
+            currentUnit.x = nextX
+            currentUnit.y = nextY
 
-                -- Resetting the frustration: the unit can move
-                currentUnit.frustration = 0
-            end
+            -- Resetting the frustration: the unit can move
+            currentUnit.frustration = 0
         end
     end
 end
@@ -148,7 +132,6 @@ end
 -- Unit Handling
 
 function rtsWorld.createUnit(self, relativeX, relativeY)
-    print ("Creating unit on ", relativeX, ", ", relativeY)
     table.insert(self.units, rtsUnit:new(relativeX - self.offsetX, relativeY - self.offsetY))
 end
 
@@ -178,7 +161,7 @@ function rtsWorld.moveSelectedUnitsTo(self, targetX, targetY)
     for i = 1, #self.units do
         if self.units[i].selected then
             self.units[i]:setTarget(targetX - self.offsetX, targetY - self.offsetY)
-            self.units[i].isActive = true
+            self.units[i]:commandMove()
         end
     end
 end

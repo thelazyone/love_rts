@@ -50,10 +50,11 @@ function love.update(dt)
     world:update(dt)
 end
 
+
 function love.mousepressed( x, y, button, istouch, presses )
 
 
-    -- Ctrl + LClick generates a new unit
+    -- Ctrl + LClick generates a new unit - TEMPORARY
     if love.keyboard.isDown("lctrl") and button == 1 then
         world:createUnit(x, y)
     end
@@ -70,6 +71,7 @@ function love.mousepressed( x, y, button, istouch, presses )
 
 end
 
+
 function love.mousereleased( x, y, button, istouch, presses)
 
     -- If button is released, a group of units could be selected
@@ -78,6 +80,7 @@ function love.mousereleased( x, y, button, istouch, presses)
         world:hideSelection()
     end
 end
+
 
 function love.mousemoved( x, y, dx, dy, istouch )
 
@@ -91,6 +94,7 @@ function love.mousemoved( x, y, dx, dy, istouch )
     updateDragArea(x, y)
 end
 
+
 function updateDragArea(x, y)
     local rectThreshold = 2
     local distance = math.abs(lastClickX - x) + math.abs(lastClickY - y)
@@ -100,6 +104,7 @@ function updateDragArea(x, y)
         world:hideSelection()
     end
 end
+
 
 -- Final Drawing
 function love.draw()
