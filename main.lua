@@ -1,9 +1,5 @@
 local rtsWorld = require 'components/rtsWorld'
 
--- TODO to be removed - the movement should happen in the rtsWorld
-local rtsMap = require 'components/rtsMap' 
-
-
 function love.load()
     world = rtsWorld:new()
 end
@@ -17,19 +13,19 @@ function love.update(dt)
     -- ####################################
 
     if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-        rtsMap:moveCenterOffset(world.map, -1, 0)
+        rtsWorld:moveOffset(world, -1, 0)
     end
 
     if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-        rtsMap:moveCenterOffset(world.map, 1, 0)
+        rtsWorld:moveOffset(world, 1, 0)
     end
 
     if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
-        rtsMap:moveCenterOffset(world.map, 0, -1)
+        rtsWorld:moveOffset(world, 0, -1)
     end
 
     if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-        rtsMap:moveCenterOffset(world.map, 0, 1)
+        rtsWorld:moveOffset(world, 0, 1)
     end
 
     -- ####################################
