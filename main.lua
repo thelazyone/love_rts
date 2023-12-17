@@ -33,18 +33,29 @@ function love.update(dt)
     -- Other Controls 
     -- ####################################
 
-
-
-
     -- TODO
+
+    -- ####################################
+    -- Updating the world.
+    -- ####################################
+    rtsWorld:update(world, dt)
 end
 
 function love.mousepressed( x, y, button, istouch, presses )
+
+    -- Ctrl + LClick generates a new unit
     if love.keyboard.isDown("lctrl") and button == 1 then
         rtsWorld:createUnit(world, x, y)
     end
-end
 
+    if button == 2 then
+        -- todo temporary:
+        rtsWorld:selectUnits(world, 0, 0, 1000, 1000)
+
+        rtsWorld:moveSelectedUnitsTo(world, x, y)
+    end
+
+end
 
 -- Final Drawing
 function love.draw()

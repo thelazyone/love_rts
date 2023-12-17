@@ -57,6 +57,13 @@ function rtsWorld:getImage(world)
 
 end
 
+-- Update function
+function rtsWorld:update(world, dt) 
+    for i = 1, #world.units do
+        rtsUnit:update(world.units[i], dt)
+    end
+end
+
 -- Sets the visualization center on the coordinates.
 function rtsWorld:setOffset(world, newX, newY)
     world.offsetX = newX
@@ -68,11 +75,30 @@ function rtsWorld:moveOffset(world, moveX, moveY)
     world.offsetY = world.offsetY + moveY
 end
 
-function rtsWorld:createUnit(world, relative_x, relative_y)
-    table.insert(world.units, rtsUnit:new(relative_x - world.offsetX, relative_y - world.offsetY))
+-- Unit Handling
+
+function rtsWorld:createUnit(world, relativeX, relativeY)
+    print ("Creating unit on ", relativeX, ", ", relativeY)
+    table.insert(world.units, rtsUnit:new(relativeX - world.offsetX, relativeY - world.offsetY))
 end
-function rtsWorld.createUnitb(x, y)
-    table.insert(world.units, rtsUnit:new(x, y))
+
+function rtsWorld:selectUnits(world, startX, startY, endX, endY)
+    for i = 1, #world.units do
+        if world.units[i].x > startX and world.units[i].x < endX and world.units[i].y > startY and world.units[i].y < endY then
+            world.units[i].selected = true
+        else
+            world.units[i].selected = false
+        end
+    end
+end
+
+function rtsWorld:moveSelectedUnitsTo(world, targetX, targetY)
+    print ("sending to ", targetX, ", ", targetY)
+    for i = 1, #world.units do
+        if world.units[i].selected then
+            rtsUnit:setTarget(world.units[i], targetX, targetY)
+        end
+    end
 end
 
 return rtsWorld
