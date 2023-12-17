@@ -3,7 +3,6 @@
 -- more units.
 
 local rtsUnit = {}
-local minDistThreshold = 1
 
 function rtsUnit:new(x, y)
 
@@ -14,8 +13,16 @@ function rtsUnit:new(x, y)
     unit.speed = 250
     unit.targetX = x
     unit.targetY = y
+    unit.radius = 10
 
+    -- Level of patience for the Unit before giving up the order
+    -- in case of collisions
+    unit.patience = 10
+    unit.frustration = 0 -- This will build up
+
+    -- Flags
     unit.selected = false
+    unit.isActive = false
 
     return unit
 end
@@ -28,10 +35,10 @@ function rtsUnit:addToCanvas(unit, canvas)
     canvas:renderTo(function()
         if unit.selected then
             love.graphics.setColor(1, .5, .5, 1)
-            love.graphics.circle("fill", unit.x, unit.y, 10)
+            love.graphics.circle("fill", unit.x, unit.y, unit.radius)
         else 
             love.graphics.setColor(1, 1, 1., 1)
-            love.graphics.circle("fill", unit.x, unit.y, 10)
+            love.graphics.circle("fill", unit.x, unit.y, unit.radius)
         end
         love.graphics.setColor(1, 1, 1., 1)
     end)
@@ -41,25 +48,13 @@ end
 function rtsUnit:setTarget(unit, targetX, targetY)
     unit.targetX = targetX
     unit.targetY = targetY
+    print ("sending ", unit, " to ", targetX, ", ", targetY)
 end    
 
 
-function rtsUnit:update(unit, dt)
+-- function rtsUnit:update(unit, dt)
 
-    -- If too close to the target, ignoring.
-    local dist = (unit.targetX - unit.x)^2 + math.abs(unit.targetY - unit.y)^2
-    if dist < (minDistThreshold * unit.speed * dt) ^ 2 then
-        return
-    end
 
-    -- Moving in the direction of the target
-    direction = math.atan((unit.targetY - unit.y) / (unit.targetX - unit.x))
-    if unit.targetX - unit.x < 0 then
-        direction = direction + math.pi
-    end
-
-    unit.x = unit.x + unit.speed * math.cos(direction) * dt
-    unit.y = unit.y + unit.speed * math.sin(direction) * dt
-end
+-- end
 
 return rtsUnit 

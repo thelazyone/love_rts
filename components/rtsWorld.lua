@@ -77,8 +77,50 @@ end
 
 -- Update function
 function rtsWorld:update(world, dt) 
+    
+    local minDistThreshold = 1
+
+    -- Moving units, checking for collision if necessary.
+    -- This has a N^2 complexity and is NOT recommended, however what
+    -- most old-school RTS do is to set individual positions for the units at the target, 
+    -- and I don't want to do that.
+    -- A better solution is to be expected.
     for i = 1, #world.units do
-        rtsUnit:update(world.units[i], dt)
+
+        local currentUnit = world.units[i]
+
+        if currentUnit.isActive then -- This is not a great way to go, but LOVE2D has no "continue" statement
+            -- If too close to the target, stopping.
+            local dist = (currentUnit.targetX - currentUnit.x)^2 + math.abs(currentUnit.targetY - currentUnit.y)^2
+            if dist < (minDistThreshold * currentUnit.speed * dt) ^ 2 then
+                currentUnit.isActive = false
+            end
+
+            -- Moving in the direction of the target
+            direction = math.atan((currentUnit.targetY - currentUnit.y) / (currentUnit.targetX - currentUnit.x))
+            if currentUnit.targetX - currentUnit.x < 0 then
+                direction = direction + math.pi
+            end
+
+            -- Checking if the position doesn't collide with others, in that case not moving.
+            local newUnitX = currentUnit.x + currentUnit.speed * math.cos(direction) * dt
+            local newUnitY = currentUnit.y + currentUnit.speed * math.sin(direction) * dt
+            local isCollision = false
+            for j = 1, #world.units do
+                if not(i == j) and (newUnitX - world.units[j].x)^2+(newUnitY - world.units[j].y)^2 < (2*currentUnit.radius)^2 then
+                    isCollision = true
+                    currentUnit.frustration = currentUnit.frustration + dt
+                    if currentUnit.frustration > currentUnit.patience then
+                        currentUnit.isActive = false
+                    end
+                end
+            end
+
+            if isCollision == false then 
+                currentUnit.x = newUnitX
+                currentUnit.y = newUnitY
+            end
+        end
     end
 end
 
@@ -125,10 +167,10 @@ function rtsWorld:selectUnits(world, startX, startY, endX, endY)
 end
 
 function rtsWorld:moveSelectedUnitsTo(world, targetX, targetY)
-    print ("sending to ", targetX, ", ", targetY)
     for i = 1, #world.units do
         if world.units[i].selected then
             rtsUnit:setTarget(world.units[i], targetX, targetY)
+            world.units[i].isActive = true
         end
     end
 end
