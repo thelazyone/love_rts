@@ -22,36 +22,6 @@ rtsWorld.selW = 0
 rtsWorld.selH = 0
 
 
--- -- No values for the creation of the self. all the magic numbers are inside for now.
--- function rtsWorld.new()
-
---     -- World Data
---     local world = {}
---     world.screenW = 800
---     world.screenH = 600
---     world.offsetX = 0
---     world.offsetY = 0
-
---     -- Map Data
---     world.map = rtsMap:new(love.image.newImageData("resources/map.png"))
-
---     -- Units Data
---     world.units = {}
-
---     -- Selection rectangle
---     world.isSelectionVisible = false
---     world.selStartX = 0
---     world.selStartY = 0
---     world.selW = 0
---     world.selH = 0
-
---     setmetatable(world, {__index = rtsWorld})
-
---     return world
--- end
-
-
-
 -- returns the global canvas
 function rtsWorld.getImage(self, world)
 
