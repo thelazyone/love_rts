@@ -2,8 +2,8 @@ local world = require 'components/rtsWorld'
 
 
 -- Mouse last click
-local lastClickX = 0
-local lastClickY = 0
+local lastClickX = nil
+local lastClickY = nil
 
 function love.load()
 
@@ -20,18 +20,22 @@ function love.update(dt)
 
     if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
         world:moveOffset(-moveSpeed, 0)
+        updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
         world:moveOffset(moveSpeed, 0)
+        updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
         world:moveOffset(0, -moveSpeed)
+        updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
         world:moveOffset(0, moveSpeed)
+        updateDragArea(love.mouse.getPosition())
     end
 
     -- ####################################
@@ -76,7 +80,18 @@ function love.mousereleased( x, y, button, istouch, presses)
 end
 
 function love.mousemoved( x, y, dx, dy, istouch )
+
+    -- If mouse position is nil it means that no click has been done so far.
+    if lastClickX == nil or lastClickY == nil then
+        lastClickX = 0
+        lastClickY = 0
+    end
+
     -- Drawing an overlayed rectangle to indicate what has been selected
+    updateDragArea(x, y)
+end
+
+function updateDragArea(x, y)
     local rectThreshold = 2
     local distance = math.abs(lastClickX - x) + math.abs(lastClickY - y)
     if love.mouse.isDown(1) and distance > rectThreshold then
