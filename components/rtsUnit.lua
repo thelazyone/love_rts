@@ -3,22 +3,6 @@
 -- more units.
 
 local rtsUnit = {}
--- rtsUnit.x = 0
--- rtsUnit.y = 0
--- rtsUnit.speed = 250
--- rtsUnit.targetX = 0
--- rtsUnit.targetY = 0
--- rtsUnit.radius = 10
-
--- -- Level of patience for the Unit before giving up the order
--- -- in case of collisions
--- rtsUnit.patience = 2
--- rtsUnit.frustration = 0 -- This will build up
-
--- -- Flags
--- rtsUnit.selected = false
--- rtsUnit.isActive = false
-
 
 function rtsUnit:new(x, y)
 

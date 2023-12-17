@@ -1,9 +1,6 @@
 -- The world map. Loads an image and displays it as imageData for the world to generate
 
 local rtsMap = {}
--- rtsMap.w = 0
--- rtsMap.h = 0
--- rtsMap.image = nil 
 
 -- Creates the new rts map, given size and base image.
 -- Make sure that the image is wider than the w and h

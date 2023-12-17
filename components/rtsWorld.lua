@@ -154,18 +154,15 @@ end
 
 function rtsWorld.selectUnits(self, startX, startY, endX, endY)
     for i = 1, #self.units do
-        local startXLocal = math.min(startX, endX)
-        local startYLocal = math.min(startY, endY)
-        local endXLocal = math.max(startX, endX)
-        local endYLocal = math.max(startY, endY)
-
-        -- Solution 1: check the centers of the units. BORING.
-        --local is_unit_selected = self.units[i].x > startX - self.offsetX and self.units[i].x < endX - self.offsetX and self.units[i].y > startY - self.offsetY and self.units[i].y < endY - self.offsetY
+        local startXLocal = math.min(startX, endX) - self.offsetX
+        local startYLocal = math.min(startY, endY) - self.offsetY
+        local endXLocal = math.max(startX, endX) - self.offsetX
+        local endYLocal = math.max(startY, endY) - self.offsetY
 
         -- Solution 2: check any point of the circle units.
         -- Method found for c++ on https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
-        rectBorderX = math.max(startXLocal - self.offsetX, math.min(self.units[i].x, endXLocal - self.offsetX))
-        rectBorderY = math.max(startYLocal - self.offsetY, math.min(self.units[i].y, endYLocal - self.offsetY))
+        rectBorderX = math.max(startXLocal, math.min(self.units[i].x, endXLocal))
+        rectBorderY = math.max(startYLocal, math.min(self.units[i].y, endYLocal))
         local is_unit_selected = (rectBorderX - self.units[i].x)^2 + (rectBorderY - self.units[i].y)^2 < self.units[i].radius ^ 2
 
         if is_unit_selected then
