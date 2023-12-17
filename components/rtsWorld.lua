@@ -1,4 +1,5 @@
 local rtsMap = require 'components/rtsMap'
+local rtsUnit = require 'components/rtsUnit'
 
 
 local rtsWorld = {}
@@ -6,13 +7,18 @@ local rtsWorld = {}
 -- No values for the creation of the world. all the magic numbers are inside for now.
 function rtsWorld:new()
 
+    -- World Data
     local world = {}
     world.screenW = 800
     world.screenH = 600
     world.offsetX = 0
     world.offsetY = 0
 
+    -- Map Data
     world.map = rtsMap:new(love.image.newImageData("resources/map.png"))
+
+    -- Units Data
+    world.units = {}
 
     return world
 end
@@ -29,8 +35,10 @@ function rtsWorld:getImage(world)
         love.graphics.draw(love.graphics.newImage(rtsMap:getImage(world.map)))
     end)
 
-    -- Adding the rest of the stuff
-    -- TODO
+    -- Drawing Units
+    for i = 1, #world.units do
+        rtsUnit:addToCanvas(world.units[i], canvas)
+    end
 
     -- overriding the visible world content with the world image, shifted.
     local allWorld = canvas:newImageData()
@@ -60,5 +68,11 @@ function rtsWorld:moveOffset(world, moveX, moveY)
     world.offsetY = world.offsetY + moveY
 end
 
+function rtsWorld:createUnit(world, relative_x, relative_y)
+    table.insert(world.units, rtsUnit:new(relative_x - world.offsetX, relative_y - world.offsetY))
+end
+function rtsWorld.createUnitb(x, y)
+    table.insert(world.units, rtsUnit:new(x, y))
+end
 
 return rtsWorld
