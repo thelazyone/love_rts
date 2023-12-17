@@ -76,7 +76,6 @@ function love.mousereleased( x, y, button, istouch, presses)
 end
 
 function love.mousemoved( x, y, dx, dy, istouch )
-
     -- Drawing an overlayed rectangle to indicate what has been selected
     local rectThreshold = 2
     local distance = math.abs(lastClickX - x) + math.abs(lastClickY - y)

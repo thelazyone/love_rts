@@ -17,7 +17,7 @@ function rtsUnit:new(x, y)
 
     -- Level of patience for the Unit before giving up the order
     -- in case of collisions
-    unit.patience = 10
+    unit.patience = 2
     unit.frustration = 0 -- This will build up
 
     -- Flags
@@ -48,7 +48,6 @@ end
 function rtsUnit:setTarget(unit, targetX, targetY)
     unit.targetX = targetX
     unit.targetY = targetY
-    print ("sending ", unit, " to ", targetX, ", ", targetY)
 end    
 
 

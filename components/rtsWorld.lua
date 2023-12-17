@@ -110,15 +110,21 @@ function rtsWorld:update(world, dt)
                 if not(i == j) and (newUnitX - world.units[j].x)^2+(newUnitY - world.units[j].y)^2 < (2*currentUnit.radius)^2 then
                     isCollision = true
                     currentUnit.frustration = currentUnit.frustration + dt
+                    print("Frustration is ", currentUnit.frustration)
                     if currentUnit.frustration > currentUnit.patience then
+                        print("unit got frustrated!")
                         currentUnit.isActive = false
                     end
                 end
             end
 
             if isCollision == false then 
+                -- Updating the movement
                 currentUnit.x = newUnitX
                 currentUnit.y = newUnitY
+
+                -- Resetting the frustration: the unit can move
+                currentUnit.frustration = 0
             end
         end
     end
@@ -158,13 +164,23 @@ end
 
 function rtsWorld:selectUnits(world, startX, startY, endX, endY)
     for i = 1, #world.units do
-        if world.units[i].x > startX - world.offsetX and world.units[i].x < endX - world.offsetX and world.units[i].y > startY - world.offsetY and world.units[i].y < endY - world.offsetY then
+        -- Solution 1: check the centers of the units. BORING.
+        --local is_unit_selected = world.units[i].x > startX - world.offsetX and world.units[i].x < endX - world.offsetX and world.units[i].y > startY - world.offsetY and world.units[i].y < endY - world.offsetY
+
+        -- Solution 2: check any point of the circle units.
+        -- Method found for c++ on https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
+        rectBorderX = math.max(startX - world.offsetX, math.min(world.units[i].x, endX - world.offsetX))
+        rectBorderY = math.max(startY - world.offsetY, math.min(world.units[i].y, endY - world.offsetY))
+        local is_unit_selected = (rectBorderX - world.units[i].x)^2 + (rectBorderY - world.units[i].y)^2 < world.units[i].radius ^ 2
+
+        if is_unit_selected then
             world.units[i].selected = true
         else
             world.units[i].selected = false
         end
     end
 end
+
 
 function rtsWorld:moveSelectedUnitsTo(world, targetX, targetY)
     for i = 1, #world.units do
