@@ -104,6 +104,12 @@ function rtsUnit.getNextMove(self, dt)
 end
 
 
+function rtsUnit.setMove(self, x, y)
+    self.x = x
+    self.y = y 
+end
+
+
 -- ##############################################
 -- State Machine Methods
 -- This should handle potential forbidden state changes.
