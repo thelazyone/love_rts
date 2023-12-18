@@ -143,7 +143,6 @@ function updateDragArea(x, y)
         rectangle:showSelection(math.min(lastClickX, x), math.min(lastClickY, y), math.max(lastClickX, x), math.max(lastClickY, y))
     else
         rectangle:setSelection(math.min(lastClickX, x), math.min(lastClickY, y), math.max(lastClickX, x), math.max(lastClickY, y))
-        --rectangle:hideSelection()
     end
 end
 

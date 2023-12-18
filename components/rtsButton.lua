@@ -17,10 +17,12 @@ function rtsButton:new(x, y, text)
     return button
 end
 
+-- Checks if the xy coords are inside the button.
 function rtsButton:isInside(x, y)
     return x > self.x and x < self.x + self.w and y > self.y and y < self.y + self.h 
 end
 
+-- Draws the button. If the "isPressed" is true it draws it lighter, but then sets "isPressed" to false.
 function rtsButton:draw()
     love.graphics.setColor(.5, .5, .5, 1)
     if self.isPressed then

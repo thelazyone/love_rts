@@ -19,7 +19,7 @@ function step:moveAllUnits(units, dt)
                 currentUnit:commandStop()
             end     
         else
-            currentUnit:setMove(nextX, nextY)
+            currentUnit:setPos(nextX, nextY)
             currentUnit.frustration = 0
         end
     end

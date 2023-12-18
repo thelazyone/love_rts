@@ -25,6 +25,7 @@ function rectangle:hideSelection()
     self.isSelectionVisible = false
 end
 
+-- Given the current units, checks which ones fall into the currently chosen rect
 function rectangle:selectUnits(units)
     for i = 1, #units do
         local startXLocal, startYLocal = self.selStartX, self.selStartY
@@ -45,6 +46,7 @@ function rectangle:selectUnits(units)
     end
 end
 
+-- Updates the provided canvas with the rectangle.
 function rectangle:addToCanvas(canvas)
     if self.isSelectionVisible then 
         -- Drawing the circle.

@@ -8,14 +8,13 @@ renderer.offsetX = 0
 renderer.offsetY = 0
 
 function renderer:initialize(map_path, camera, rectangle)
-
-    -- Map Data
     self.map = rtsMap:new(love.image.newImageData(map_path))
     self.canvas = love.graphics.newCanvas(self.map.w, self.map.h)
     self.camera = camera
     self.rectangle = rectangle
 end
 
+-- Returns a cropped image combining together all the elements (units and buildings) for the scene
 function renderer:getImage(units)
 
     -- Adding the background map.

@@ -104,7 +104,7 @@ function rtsUnit:getNextMove(dt)
 end
 
 
-function rtsUnit:setMove(x, y)
+function rtsUnit:setPos(x, y)
     self.x = x
     self.y = y 
 end
