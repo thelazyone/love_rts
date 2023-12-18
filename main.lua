@@ -1,12 +1,14 @@
 local world = require 'components/rtsWorld'
-
+local camera = require 'components/rtsCamera'
+local rectangle = require 'components/rtsSelectionRectangle'
+local renderer = require 'components/rtsRenderer'
 
 -- Mouse last click
 local lastClickX = nil
 local lastClickY = nil
 
 function love.load()
-
+    -- Nothing to do here.
 end
 
 
@@ -19,22 +21,22 @@ function love.update(dt)
     local moveSpeed = 5
 
     if love.keyboard.isDown("right") or love.keyboard.isDown("d") then
-        world:moveOffset(-moveSpeed, 0)
+        camera:moveOffset(-moveSpeed, 0)
         updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("left") or love.keyboard.isDown("a") then
-        world:moveOffset(moveSpeed, 0)
+        camera:moveOffset(moveSpeed, 0)
         updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("down") or love.keyboard.isDown("s") then
-        world:moveOffset(0, -moveSpeed)
+        camera:moveOffset(0, -moveSpeed)
         updateDragArea(love.mouse.getPosition())
     end
 
     if love.keyboard.isDown("up") or love.keyboard.isDown("w") then
-        world:moveOffset(0, moveSpeed)
+        camera:moveOffset(0, moveSpeed)
         updateDragArea(love.mouse.getPosition())
     end
 
@@ -76,8 +78,8 @@ function love.mousereleased( x, y, button, istouch, presses)
 
     -- If button is released, a group of units could be selected
     if button == 1 then
-        world:selectUnits(lastClickX, lastClickY, x, y)
-        world:hideSelection()
+        rectangle:selectUnits(world.units)
+        rectangle:hideSelection()
     end
 end
 
@@ -99,9 +101,9 @@ function updateDragArea(x, y)
     local rectThreshold = 2
     local distance = math.abs(lastClickX - x) + math.abs(lastClickY - y)
     if love.mouse.isDown(1) and distance > rectThreshold then
-        world:showSelection(math.min(lastClickX, x), math.min(lastClickY, y), math.max(lastClickX, x), math.max(lastClickY, y))
+        rectangle:showSelection(math.min(lastClickX, x), math.min(lastClickY, y), math.max(lastClickX, x), math.max(lastClickY, y))
     else
-        world:hideSelection()
+        rectangle:hideSelection()
     end
 end
 
@@ -110,5 +112,5 @@ end
 function love.draw()
 
     -- Drawing the world
-    love.graphics.draw(world:getImage())
+    love.graphics.draw(renderer:getImage(world.units))
 end

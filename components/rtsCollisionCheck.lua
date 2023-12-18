@@ -1,7 +1,7 @@
-local rtsCollisionCheck = {}
+local collisionCheck = {}
 
 
-function rtsCollisionCheck.resolveCollision(self, idx, units, x, y)
+function collisionCheck.resolveCollision(self, idx, units, x, y)
 
     local isCollision = false
     for i = 1, #units do
@@ -17,4 +17,4 @@ function rtsCollisionCheck.resolveCollision(self, idx, units, x, y)
 
 end
 
-return rtsCollisionCheck
+return collisionCheck
