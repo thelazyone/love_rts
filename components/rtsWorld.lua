@@ -5,8 +5,6 @@ local camera = require 'components/rtsCamera'
 
 local rtsWorld = {}
 
-renderer:initialize("resources/map.png", camera)
-
 -- Data
 rtsWorld.units = {}
 -- TODO add buildings or whatnot

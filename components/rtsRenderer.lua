@@ -1,5 +1,4 @@
 local rtsMap = require 'components/rtsMap'
-local rectangle = require 'components/rtsSelectionRectangle'
 
 local renderer = {}
 
@@ -8,11 +7,13 @@ renderer.screenH = 600
 renderer.offsetX = 0
 renderer.offsetY = 0
 
-function renderer:initialize(map_path, camera)
+function renderer:initialize(map_path, camera, rectangle)
+
     -- Map Data
     self.map = rtsMap:new(love.image.newImageData(map_path))
     self.canvas = love.graphics.newCanvas(self.map.w, self.map.h)
     self.camera = camera
+    self.rectangle = rectangle
 end
 
 function renderer:getImage(units)
@@ -28,15 +29,7 @@ function renderer:getImage(units)
     end
 
     -- Showing the rectangle on top of the units:
-    if rectangle.isSelectionVisible then
-        self.canvas:renderTo(function()
-            love.graphics.setColor(1, 0, 0., 0.1)
-            love.graphics.rectangle("fill", rectangle.selStartX, rectangle.selStartY, rectangle.selW, rectangle.selH)
-            love.graphics.setColor(1, 0, 0., 1)
-            love.graphics.rectangle("line", rectangle.selStartX, rectangle.selStartY, rectangle.selW, rectangle.selH)
-            love.graphics.setColor(1, 1, 1., 1)
-        end)
-    end
+    self.rectangle:addToCanvas(self.canvas)
 
     -- overriding the visible world content with the world image, shifted.
     local allWorld = self.canvas:newImageData()

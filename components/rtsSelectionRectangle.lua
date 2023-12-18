@@ -8,22 +8,28 @@ rectangle.selStartY = 0
 rectangle.selW = 0
 rectangle.selH = 0
 
+-- Sets the bound rect without showing it
+function rectangle:setSelection(startX, startY, endX, endY)
+    self.selStartX, self.selStartY = camera:getCoordsOffset(startX, startY)
+    self.selW, self.selH  =  endX - startX, endY - startY
+end
+
 -- Adding rectangle if present
 function rectangle:showSelection(startX, startY, endX, endY)
-    rectangle.isSelectionVisible = true
-    rectangle.selStartX, rectangle.selStartY = camera:getCoordsOffset(startX, startY)
-    rectangle.selW, rectangle.selH  =  endX - startX, endY - startY
+    self.isSelectionVisible = true
+    self:setSelection(startX, startY, endX, endY)
 end
 
 -- Hides the bound rect
 function rectangle:hideSelection()
-    rectangle.isSelectionVisible = false
+    self.isSelectionVisible = false
 end
 
 function rectangle:selectUnits(units)
     for i = 1, #units do
         local startXLocal, startYLocal = self.selStartX, self.selStartY
         local endXLocal, endYLocal = self.selW + self.selStartX, self.selH + self.selStartY
+        print("selection area is", startXLocal, startYLocal,endXLocal, endYLocal)
 
         -- Solution 2: check any point of the circle units.
         -- Method found for c++ on https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
@@ -38,5 +44,19 @@ function rectangle:selectUnits(units)
         end
     end
 end
+
+function rectangle:addToCanvas(canvas)
+    if self.isSelectionVisible then 
+        -- Drawing the circle.
+        canvas:renderTo(function()
+            love.graphics.setColor(1, 0, 0., 0.1)
+            love.graphics.rectangle("fill", self.selStartX, self.selStartY, self.selW, self.selH)
+            love.graphics.setColor(1, 0, 0., 1)
+            love.graphics.rectangle("line", self.selStartX, self.selStartY, self.selW, self.selH)
+            love.graphics.setColor(1, 1, 1., 1)
+        end)
+    end
+end
+
 
 return rectangle
