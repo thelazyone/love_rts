@@ -47,7 +47,7 @@ end
 -- ##############################################
 
 -- Static function. The sprite is a circle
-function rtsUnit.addToCanvas(self, canvas)
+function rtsUnit:addToCanvas(canvas)
     -- Drawing the circle.
     canvas:renderTo(function()
         if self.selected then
@@ -69,7 +69,7 @@ end
 -- When asked, predicts the next move in xy that the unit would do.
 -- This is necessary to the rtsWorld, which then handles collisions of sort
 -- Returns a pair of x and y
-function rtsUnit.getNextMove(self, dt)
+function rtsUnit:getNextMove(dt)
 
     if self.state == "idle" then -- nothing to do
         return self.x, self.y
@@ -104,7 +104,7 @@ function rtsUnit.getNextMove(self, dt)
 end
 
 
-function rtsUnit.setMove(self, x, y)
+function rtsUnit:setMove(x, y)
     self.x = x
     self.y = y 
 end
@@ -116,7 +116,7 @@ end
 -- ##############################################
 
 -- Move interrupts any other action and can be issued from any state
-function rtsUnit.commandMove(self, targetX, targetY)
+function rtsUnit:commandMove(targetX, targetY)
     print ("Sent command Move to ", targetX, targetY)
     self.targetX = targetX
     self.targetY = targetY
@@ -124,7 +124,7 @@ function rtsUnit.commandMove(self, targetX, targetY)
 end
 
 -- Stop can be issued from any state
-function rtsUnit.commandStop(self)
+function rtsUnit:commandStop()
     print ("Sent command Stop")
     self.state = "idle"
 end 

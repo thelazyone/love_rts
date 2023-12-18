@@ -18,7 +18,7 @@ function rtsMap:new(image)
 end
 
 -- Returns the image of the map at the current centering.
-function rtsMap.getImage(self)
+function rtsMap:getImage()
     return self.image
 end
 

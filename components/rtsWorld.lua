@@ -13,19 +13,19 @@ rtsWorld.units = {}
 
 
 -- Update function
-function rtsWorld.update(self, dt)
+function rtsWorld:update(dt)
     stepCalculation:moveAllUnits(self.units, dt)
 end
 
 
 -- Adds a new unit in the list.
-function rtsWorld.createUnit(self, relativeX, relativeY)
+function rtsWorld:createUnit(relativeX, relativeY)
     table.insert(self.units, rtsUnit:new(camera:getCoordsOffset(relativeX, relativeY)))
 end
 
 
 -- Issues a move command to all the selected units.
-function rtsWorld.moveSelectedUnitsTo(self, targetX, targetY)
+function rtsWorld:moveSelectedUnitsTo(targetX, targetY)
     for i = 1, #self.units do
         if self.units[i].selected then
             self.units[i]:commandMove(camera:getCoordsOffset(targetX, targetY))

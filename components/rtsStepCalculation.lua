@@ -7,7 +7,7 @@ local step = {}
 -- most old-school RTS do is to set individual positions for the units at the target,
 -- and I don't want to do that.
 -- A better solution is to be expected.
-function step.moveAllUnits(self, units, dt)
+function step:moveAllUnits(units, dt)
     for i = 1, #units do
 
         local currentUnit = units[i]

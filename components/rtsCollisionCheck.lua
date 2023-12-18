@@ -1,7 +1,7 @@
 local collisionCheck = {}
 
 
-function collisionCheck.resolveCollision(self, idx, units, x, y)
+function collisionCheck:resolveCollision(idx, units, x, y)
 
     local isCollision = false
     for i = 1, #units do

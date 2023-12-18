@@ -9,18 +9,18 @@ rectangle.selW = 0
 rectangle.selH = 0
 
 -- Adding rectangle if present
-function rectangle.showSelection(self, startX, startY, endX, endY)
+function rectangle:showSelection(startX, startY, endX, endY)
     rectangle.isSelectionVisible = true
     rectangle.selStartX, rectangle.selStartY = camera:getCoordsOffset(startX, startY)
     rectangle.selW, rectangle.selH  =  endX - startX, endY - startY
 end
 
 -- Hides the bound rect
-function rectangle.hideSelection(self)
+function rectangle:hideSelection()
     rectangle.isSelectionVisible = false
 end
 
-function rectangle.selectUnits(self, units)
+function rectangle:selectUnits(units)
     for i = 1, #units do
         local startXLocal, startYLocal = self.selStartX, self.selStartY
         local endXLocal, endYLocal = self.selW + self.selStartX, self.selH + self.selStartY

@@ -8,14 +8,14 @@ renderer.screenH = 600
 renderer.offsetX = 0
 renderer.offsetY = 0
 
-function renderer.initialize(self, map_path, camera)
+function renderer:initialize(map_path, camera)
     -- Map Data
     self.map = rtsMap:new(love.image.newImageData(map_path))
     self.canvas = love.graphics.newCanvas(self.map.w, self.map.h)
     self.camera = camera
 end
 
-function renderer.getImage(self, units)
+function renderer:getImage(units)
 
     -- Adding the background map.
     self.canvas:renderTo(function()
