@@ -6,6 +6,7 @@ local renderer = require 'components.renderer'
 local rectangle = require 'components.selectionRectangle'
 renderer:initialize("resources/map.png", camera, rectangle)
 local button = require 'components.button'
+local resourcesManager = require 'components.resourcesManager'
 
 -- Mouse last click.
 local lastClickX = nil
@@ -13,8 +14,9 @@ local lastClickY = nil
 
 -- Creating the buttons
 local addUnitButton = button:new(20, 540, "add unit")
-local buildThingButton = button:new(140, 540, "build")
-local workAtButton = button:new(260, 540, "work")
+local buildThingButton = button:new(140, 540, "build factory")
+local buildExtractButton = button:new(260, 540, "build extractor")
+resourcesManager.resource = 1.5
 
 -- Last Button pressed. "none" is the default.
 local lastButton = "none"
@@ -75,12 +77,13 @@ function love.mousepressed( x, y, button, istouch, presses )
             rectangle:hideSelection()
 
         -- If build is set, creates a new (unbuilt) building
-        elseif lastButton == "build" then
-            world:createBuilding(x, y)
+        elseif lastButton == "factory" then
+            world:createBuilding(x, y, "factory")
             rectangle:hideSelection()
 
         -- if work, sending the selected units to do work on a building.
-        elseif lastButton == "work" then
+        elseif lastButton == "extractor" then
+            world:createBuilding(x, y, "extractor")
             rectangle:hideSelection()
 
         else 
@@ -112,9 +115,9 @@ function love.mousereleased( x, y, button, istouch, presses)
         if addUnitButton:isInside(x, y) then
             lastButton = "add"
         elseif buildThingButton:isInside(x, y) then
-            lastButton = "build"
-        elseif workAtButton:isInside(x, y) then
-            lastButton = "work"
+            lastButton = "factory"
+        elseif buildExtractButton:isInside(x, y) then
+            lastButton = "extractor"
         else 
             lastButton = "none"
         end
@@ -165,13 +168,16 @@ function love.draw()
         if buildThingButton:isInside(x, y) then
             buildThingButton.isPressed = true
         end
-        if workAtButton:isInside(x, y) then
-            workAtButton.isPressed = true
+        if buildExtractButton:isInside(x, y) then
+            buildExtractButton.isPressed = true
         end
     end
 
     -- Drawing the buttons:
     addUnitButton:draw()
     buildThingButton:draw()
-    workAtButton:draw()
+    buildExtractButton:draw()
+
+    -- Drawing resources
+    love.graphics.print("resource: " .. tostring(resourcesManager.resource) .. ", produce: " .. tostring(resourcesManager.produce), 380, 580)
 end

@@ -25,9 +25,9 @@ function world:createUnit(relativeX, relativeY)
     table.insert(self.units, unit:new(camera:getCoordsOffset(relativeX, relativeY)))
 end
 
-function world:createBuilding(relativeX, relativeY)
-    table.insert(self.buildings, building:new(camera:getCoordsOffset(relativeX, relativeY)))
-    print("debug", self.buildings[1].x, self.buildings[1].y)
+function world:createBuilding(relativeX, relativeY, buildingType)
+    x, y = camera:getCoordsOffset(relativeX, relativeY)
+    table.insert(self.buildings, building:new(x, y, buildingType))
 end
 
 

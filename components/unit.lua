@@ -1,3 +1,5 @@
+local resourcesManager = require 'components.resourcesManager'
+
 -- This is the only kind of unit currently implemented.
 -- Trying to avoid inheritance, let's see how it goes with
 -- more units.
@@ -166,13 +168,19 @@ function unit:interact(dt)
         -- Passing resources to the object:
         -- If not built yet, building
         if not self.targetObj.exists then
-            self.targetObj.health = self.targetObj.health + dt * self.buildSpeed
-            -- TODO add resource drain here
+            self.targetObj:tryResourceToBuild(dt * self.buildSpeed)
 
         -- Otherwise help functioning
         else 
-            self.targetObj.working = true
-            self.targetObj.workingProgress = self.targetObj.workingProgress + dt * self.buildSpeed
+            -- If extractor, nothing to do.
+            if self.targetObj.buildingType == "extractor" then
+                return
+            end
+
+            -- If Factory, helping to produce.
+            if self.targetObj.buildingType == "factory" then
+                self.targetObj:tryResourceToProduce(dt * self.buildSpeed)
+            end
         end
     end
 end
