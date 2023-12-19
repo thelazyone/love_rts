@@ -36,7 +36,7 @@ function world:getHoveredBuilding()
     -- Searching the buildings in reverse order for the first to be in a position.
     for i = 1, #self.buildings do
         if self.buildings[#self.buildings - i + 1]:isOver(love.mouse.getPosition()) then
-            return i
+            return #self.buildings - i + 1
         end
     end
     return -1
