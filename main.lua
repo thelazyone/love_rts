@@ -5,16 +5,16 @@ local camera = require 'components.rtsCamera'
 local renderer = require 'components.rtsRenderer'
 local rectangle = require 'components.rtsSelectionRectangle'
 renderer:initialize("resources/map.png", camera, rectangle)
-local rtsButton = require 'components.rtsButton'
+local button = require 'components.button'
 
 -- Mouse last click.
 local lastClickX = nil
 local lastClickY = nil
 
 -- Creating the buttons
-local addUnitButton = rtsButton:new(20, 540, "add unit")
-local buildThingButton = rtsButton:new(140, 540, "build")
-local workAtButton = rtsButton:new(260, 540, "work")
+local addUnitButton = button:new(20, 540, "add unit")
+local buildThingButton = button:new(140, 540, "build")
+local workAtButton = button:new(260, 540, "work")
 
 -- Last Button pressed. "none" is the default.
 local lastButton = "none"
@@ -76,6 +76,7 @@ function love.mousepressed( x, y, button, istouch, presses )
 
         -- If build is set, creates a new (unbuilt) building
         elseif lastButton == "build" then
+            world:createBuilding(x, y)
             rectangle:hideSelection()
 
         -- if work, sending the selected units to do work on a building.
@@ -92,6 +93,7 @@ function love.mousepressed( x, y, button, istouch, presses )
     --If right clicking, moving units to the point.
     if button == 2 then
         world:moveSelectedUnitsTo(x, y)
+        lastButton = "none"
     end
 end
 
@@ -151,7 +153,7 @@ end
 function love.draw()
 
     -- Drawing the world
-    love.graphics.draw(renderer:getImage(world.units))
+    love.graphics.draw(renderer:getImage(world.units, world.buildings))
 
     -- The buttons should be elsewhere, these are temporary.
     -- Checking button pressed logic:

@@ -63,7 +63,7 @@ end
 
 
 -- ##############################################
--- Intelligence
+-- Logic
 -- ##############################################
 
 -- When asked, predicts the next move in xy that the unit would do.

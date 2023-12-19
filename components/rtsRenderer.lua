@@ -15,12 +15,17 @@ function renderer:initialize(map_path, camera, rectangle)
 end
 
 -- Returns a cropped image combining together all the elements (units and buildings) for the scene
-function renderer:getImage(units)
+function renderer:getImage(units, buildings)
 
     -- Adding the background map.
     self.canvas:renderTo(function()
         love.graphics.draw(love.graphics.newImage(self.map:getImage()))
     end)
+
+    -- Drawing Buildings
+    for i = 1, #buildings do
+        buildings[i]:addToCanvas(self.canvas)
+    end
 
     -- Drawing Units
     for i = 1, #units do
@@ -31,6 +36,7 @@ function renderer:getImage(units)
     self.rectangle:addToCanvas(self.canvas)
 
     -- overriding the visible world content with the world image, shifted.
+    love.graphics.setColor(1, 1, 1, 1)
     local allWorld = self.canvas:newImageData()
     local visibleWorld = love.image.newImageData(self.screenW, self.screenH)
     visibleWorld:paste(

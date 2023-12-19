@@ -1,29 +1,29 @@
-local rtsButton = {}
+local button = {}
 
-function rtsButton:new(x, y, text)
-    local button = {}
+function button:new(x, y, text)
+    local newObj = {}
 
-    button.x = x
-    button.y = y 
-    button.w = 100
-    button.h = 50
-    button.text = text
-    button.isPressed = false
+    newObj.x = x
+    newObj.y = y 
+    newObj.w = 100
+    newObj.h = 50
+    newObj.text = text
+    newObj.isPressed = false
 
     print ("defined button with ", x, y, text)
 
-    setmetatable(button, {__index = rtsButton})
+    setmetatable(newObj, {__index = button})
 
-    return button
+    return newObj
 end
 
 -- Checks if the xy coords are inside the button.
-function rtsButton:isInside(x, y)
+function button:isInside(x, y)
     return x > self.x and x < self.x + self.w and y > self.y and y < self.y + self.h 
 end
 
 -- Draws the button. If the "isPressed" is true it draws it lighter, but then sets "isPressed" to false.
-function rtsButton:draw()
+function button:draw()
     love.graphics.setColor(.5, .5, .5, 1)
     if self.isPressed then
         love.graphics.setColor(.8, .8, .8, 1)
@@ -35,4 +35,4 @@ function rtsButton:draw()
     self.isPressed = false
 end
 
-return rtsButton
+return button
