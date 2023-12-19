@@ -1,4 +1,4 @@
-local rtsCollisionCheck = require 'components/rtsCollisionCheck'
+local collisionCheck = require 'components/collisionCheck'
 
 local step = {}
 
@@ -11,7 +11,7 @@ function step:moveAllUnits(units, dt)
     for i = 1, #units do
         local currentUnit = units[i]
         local nextX, nextY = currentUnit:getNextMove(dt)
-        if rtsCollisionCheck:resolveCollision(i, units, nextX, nextY) then
+        if collisionCheck:resolveCollision(i, units, nextX, nextY) then
             currentUnit.frustration = currentUnit.frustration + dt
             if currentUnit.frustration > currentUnit.patience then
                 print("unit got frustrated!")

@@ -2,28 +2,28 @@
 -- Trying to avoid inheritance, let's see how it goes with
 -- more units.
 
-local rtsUnit = {}
+local unit = {}
 
-function rtsUnit:new(x, y)
+function unit:new(x, y)
 
-    local unit = {}
+    local newObj = {}
 
     print ("creating new unit on: ", x, ", ", y)
 
-    unit.x = x
-    unit.y = y
-    unit.speed = 250
-    unit.targetX = x
-    unit.targetY = y
-    unit.radius = 10
+    newObj.x = x
+    newObj.y = y
+    newObj.speed = 250
+    newObj.targetX = x
+    newObj.targetY = y
+    newObj.radius = 10
 
     -- Level of patience for the Unit before giving up the order
     -- in case of collisions
-    unit.patience = 2
-    unit.frustration = 0 -- This will build up
+    newObj.patience = 2
+    newObj.frustration = 0 -- This will build up
 
     -- Flags
-    unit.selected = false
+    newObj.selected = false
 
     -- State
     -- States can be:
@@ -34,11 +34,11 @@ function rtsUnit:new(x, y)
     -- interacting -> interacts with another object within range
     --
     -- Other states might include attacking and such
-    unit.state = "idle"
+    newObj.state = "idle"
 
-    setmetatable(unit, {__index = rtsUnit})
+    setmetatable(newObj, {__index = unit})
 
-    return unit
+    return newObj
 end
 
 
@@ -47,7 +47,7 @@ end
 -- ##############################################
 
 -- Static function. The sprite is a circle
-function rtsUnit:addToCanvas(canvas)
+function unit:addToCanvas(canvas)
     -- Drawing the circle.
     canvas:renderTo(function()
         if self.selected then
@@ -69,7 +69,7 @@ end
 -- When asked, predicts the next move in xy that the unit would do.
 -- This is necessary to the rtsWorld, which then handles collisions of sort
 -- Returns a pair of x and y
-function rtsUnit:getNextMove(dt)
+function unit:getNextMove(dt)
 
     if self.state == "idle" then -- nothing to do
         return self.x, self.y
@@ -104,7 +104,7 @@ function rtsUnit:getNextMove(dt)
 end
 
 
-function rtsUnit:setPos(x, y)
+function unit:setPos(x, y)
     self.x = x
     self.y = y 
 end
@@ -116,7 +116,7 @@ end
 -- ##############################################
 
 -- Move interrupts any other action and can be issued from any state
-function rtsUnit:commandMove(targetX, targetY)
+function unit:commandMove(targetX, targetY)
     print ("Sent command Move to ", targetX, targetY)
     self.targetX = targetX
     self.targetY = targetY
@@ -124,9 +124,9 @@ function rtsUnit:commandMove(targetX, targetY)
 end
 
 -- Stop can be issued from any state
-function rtsUnit:commandStop()
+function unit:commandStop()
     print ("Sent command Stop")
     self.state = "idle"
 end 
 
-return rtsUnit 
+return unit 

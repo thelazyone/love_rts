@@ -1,4 +1,4 @@
-local camera = require 'components/rtsCamera'
+local camera = require 'components/camera'
 
 
 local rectangle = {}

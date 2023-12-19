@@ -1,9 +1,9 @@
 -- customLoader = require 'components.customloader'
 
-local world = require 'components.rtsWorld'
-local camera = require 'components.rtsCamera'
-local renderer = require 'components.rtsRenderer'
-local rectangle = require 'components.rtsSelectionRectangle'
+local world = require 'components.world'
+local camera = require 'components.camera'
+local renderer = require 'components.renderer'
+local rectangle = require 'components.selectionRectangle'
 renderer:initialize("resources/map.png", camera, rectangle)
 local button = require 'components.button'
 

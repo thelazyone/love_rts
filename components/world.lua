@@ -1,8 +1,8 @@
-local rtsUnit = require 'components/rtsUnit'
+local unit = require 'components/unit'
 local building = require 'components/building'
-local stepCalculation = require 'components/rtsStepCalculation'
-local renderer = require 'components/rtsRenderer'
-local camera = require 'components/rtsCamera'
+local stepCalculation = require 'components/stepCalculation'
+local renderer = require 'components/renderer'
+local camera = require 'components/camera'
 
 local world = {}
 
@@ -21,7 +21,7 @@ end
 
 -- Adds a new unit in the list.
 function world:createUnit(relativeX, relativeY)
-    table.insert(self.units, rtsUnit:new(camera:getCoordsOffset(relativeX, relativeY)))
+    table.insert(self.units, unit:new(camera:getCoordsOffset(relativeX, relativeY)))
 end
 
 function world:createBuilding(relativeX, relativeY)

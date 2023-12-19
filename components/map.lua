@@ -1,28 +1,28 @@
 -- The world map. Loads an image and displays it as imageData for the world to generate
 
-local rtsMap = {}
+local map = {}
 
 -- Creates the new rts map, given size and base image.
 -- Make sure that the image is wider than the w and h
-function rtsMap:new(image)
+function map:new(image)
 
-    local map = {}
+    local newObj = {}
 
-    map.w = image:getWidth()
-    map.h = image:getHeight()
-    map.image = image 
+    newObj.w = image:getWidth()
+    newObj.h = image:getHeight()
+    newObj.image = image 
 
-    setmetatable(map, {__index = rtsMap})
+    setmetatable(newObj, {__index = map})
 
-    return map
+    return newObj
 end
 
 -- Returns the image of the map at the current centering.
-function rtsMap:getImage()
+function map:getImage()
     return self.image
 end
 
-return rtsMap
+return map
 
 
 
