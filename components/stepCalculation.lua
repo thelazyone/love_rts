@@ -1,4 +1,4 @@
-local collisionCheck = require 'components/collisionCheck'
+local collisionCheck = require 'components.collisionCheck'
 
 local step = {}
 
@@ -12,11 +12,13 @@ function step:moveAllUnits(units, dt)
         local currentUnit = units[i]
         local nextX, nextY = currentUnit:getNextMove(dt)
         if collisionCheck:resolveCollision(i, units, nextX, nextY) then
-            currentUnit.frustration = currentUnit.frustration + dt
-            if currentUnit.frustration > currentUnit.patience then
-                print("unit got frustrated!")
-                currentUnit:commandStop()
-            end     
+            if currentUnit.state == "moving" or currentUnit.state == "interacting" then
+                currentUnit.frustration = currentUnit.frustration + dt
+                if currentUnit.frustration > currentUnit.patience then
+                    print("unit got frustrated!")
+                    currentUnit:commandStop()
+                end     
+            end
         else
             currentUnit:setPos(nextX, nextY)
             currentUnit.frustration = 0
@@ -26,6 +28,7 @@ end
 
 function step:activateAllUnits(units, dt)
     for i = 1, #units do
+        units[i]:interact(dt)
         -- Checking if a unit is "interacting" with a building
         -- In that case, building a bit of it.
         -- TODO

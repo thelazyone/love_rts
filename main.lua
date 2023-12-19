@@ -91,7 +91,7 @@ function love.mousepressed( x, y, button, istouch, presses )
     end
 
     --If right clicking, moving units to the point.
-    if button == 2 then
+    if button == 2 then        
         world:moveSelectedUnitsTo(x, y)
         lastButton = "none"
     end

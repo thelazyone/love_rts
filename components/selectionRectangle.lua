@@ -1,4 +1,4 @@
-local camera = require 'components/camera'
+local camera = require 'components.camera'
 
 
 local rectangle = {}
@@ -30,7 +30,6 @@ function rectangle:selectUnits(units)
     for i = 1, #units do
         local startXLocal, startYLocal = self.selStartX, self.selStartY
         local endXLocal, endYLocal = self.selW + self.selStartX, self.selH + self.selStartY
-        print("selection area is", startXLocal, startYLocal,endXLocal, endYLocal)
 
         -- Solution 2: check any point of the circle units.
         -- Method found for c++ on https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/

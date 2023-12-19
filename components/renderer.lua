@@ -1,4 +1,4 @@
-local map = require 'components/map'
+local map = require 'components.map'
 
 local renderer = {}
 

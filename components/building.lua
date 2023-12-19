@@ -10,9 +10,20 @@ function building:new(x, y)
     newObj.health = 0.      -- Health goes from 0 to 1
     newObj.dead = false
 
+    -- Working logic
+    newObj.working = false
+    newObj.selfWork = true
+    newObj.workingProgress = 0      -- between 0 and 1, arbitrary construction progress
+    newObj.produceCounter = 0
+    newObj.productionSpeed = 0.1
+
     setmetatable(newObj, {__index = building})
 
     return newObj
+end
+
+function building:isOver(x, y)
+    return x > self.x - self.size/2 and x < self.x + self.size/2 and y > self.y - self.size/2 and y < self.y + self.size/2
 end
 
 -- ##############################################
@@ -43,6 +54,19 @@ function building:addToCanvas(canvas)
             self.y - self.size/2,  
             self.size, 
             self.size * (1 - self.health))
+
+        -- If in working mode, adding a small darker square
+        if self.exists and (self.working or self.selfWork) then    
+            love.graphics.setColor(.2, .2, 1., alphaValue)
+            love.graphics.rectangle("fill", self.x - self.size/4, self.y - self.size/4, self.size/2, self.size/2)
+            love.graphics.setColor(.4, .4, 1., alphaValue)
+            love.graphics.rectangle("fill", 
+            self.x - self.size/4, 
+            self.y - self.size/4,  
+            self.size/2, 
+            self.size/2 * (1 - self.workingProgress))
+            self.working = false
+        end
     end)
 end
 
@@ -58,8 +82,20 @@ function building:updateState(dt)
             self.dead = true
         end
 
-        -- temporary just to see something TODO TBR
-        self.health = math.min(1., self.health + dt)
+        -- If existing, production is underway
+        if self.exists then
+            self.workingProgress = self.workingProgress + dt * self.productionSpeed
+        end
+
+        -- Working progress:
+        if self.workingProgress > 1 then
+            self.workingProgress = 0
+            self.produceCounter = self.produceCounter + 1
+            print ("produced one element. Total is ", self.produceCounter)
+        end
+
+        -- -- temporary just to see something TODO TBR
+        -- self.health = math.min(1., self.health + dt)
 end
 
 return building
