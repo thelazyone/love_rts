@@ -8,21 +8,13 @@ local step = {}
 -- and I don't want to do that.
 -- A better solution is to be expected.
 function step:moveAllUnits(units, dt)
+
+    -- Updating the collision check definition
+    collisionCheck.units = units
+
+    -- Iterating for all units
     for i = 1, #units do
-        local currentUnit = units[i]
-        local nextX, nextY = currentUnit:getNextMove(dt)
-        if collisionCheck:resolveCollision(i, units, nextX, nextY) then
-            if currentUnit.state == "moving" or currentUnit.state == "interacting" then
-                currentUnit.frustration = currentUnit.frustration + dt
-                if currentUnit.frustration > currentUnit.patience then
-                    print("unit got frustrated!")
-                    currentUnit:commandStop()
-                end     
-            end
-        else
-            currentUnit:setPos(nextX, nextY)
-            currentUnit.frustration = 0
-        end
+        units[i]:move(dt)
     end
 end
 

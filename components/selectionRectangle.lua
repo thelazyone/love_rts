@@ -33,9 +33,9 @@ function rectangle:selectUnits(units)
 
         -- Solution 2: check any point of the circle units.
         -- Method found for c++ on https://www.geeksforgeeks.org/check-if-any-point-overlaps-the-given-circle-and-rectangle/
-        rectBorderX = math.max(startXLocal, math.min(units[i].x, endXLocal))
-        rectBorderY = math.max(startYLocal, math.min(units[i].y, endYLocal))
-        local is_unit_selected = (rectBorderX - units[i].x)^2 + (rectBorderY - units[i].y)^2 < units[i].radius ^ 2
+        rectBorderX = math.max(startXLocal, math.min(units[i].actor.x, endXLocal))
+        rectBorderY = math.max(startYLocal, math.min(units[i].actor.y, endYLocal))
+        local is_unit_selected = (rectBorderX - units[i].actor.x)^2 + (rectBorderY - units[i].actor.y)^2 < units[i].actor.radius ^ 2
 
         if is_unit_selected then
             units[i].selected = true

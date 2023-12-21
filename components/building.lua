@@ -1,15 +1,14 @@
 local resourcesManager = require 'components.resourcesManager'
+local actor = require 'components.actor'
 
 local building = {}
 
 function building:new(x, y, buildingType)
     local newObj  = {}
 
-    newObj.x = x
-    newObj.y = y
-    newObj.size = 20        -- Size in both w and h
+    newObj.actor = actor:new(x, y, 40, 0)
+
     newObj.exists = false   -- When building is issued it's just a blueprint (semi transparent)
-    newObj.health = 0.      -- Health goes from 0 to 1
     newObj.dead = false
 
     newObj.buildingType = buildingType
@@ -27,7 +26,9 @@ function building:new(x, y, buildingType)
 end
 
 function building:isOver(x, y)
-    return x > self.x - self.size/2 and x < self.x + self.size/2 and y > self.y - self.size/2 and y < self.y + self.size/2
+    return 
+        x > self.actor.x - self.actor.radius/2 and x < self.actor.x + self.actor.radius/2 and 
+        y > self.actor.y - self.actor.radius/2 and y < self.actor.y + self.actor.radius/2
 end
 
 -- ##############################################
@@ -61,24 +62,32 @@ function building:addToCanvas(canvas)
 
         -- Drawing the building in blue-grey, with a red overlay for the uncompleted part.
         love.graphics.setColor(.6 * colorTypeFactor, .6, 1., alphaValue)
-        love.graphics.rectangle("fill", self.x - self.size/2, self.y - self.size/2, self.size, self.size)
+        love.graphics.rectangle("fill",
+            self.actor.x - self.actor.radius/2, 
+            self.actor.y - self.actor.radius/2, 
+            self.actor.radius, 
+            self.actor.radius)
         love.graphics.setColor(.6 * colorTypeFactor, 0, 0., alphaValue * .8)
         love.graphics.rectangle("fill", 
-            self.x - self.size/2, 
-            self.y - self.size/2,  
-            self.size, 
-            self.size * (1 - self.health))
+            self.actor.x - self.actor.radius/2, 
+            self.actor.y - self.actor.radius/2,  
+            self.actor.radius, 
+            self.actor.radius * (1 - self.actor.health))
 
         -- If in working mode, adding a small darker square
         if self.exists and self.active then    
             love.graphics.setColor(.2 * colorTypeFactor, .2, 1., alphaValue)
-            love.graphics.rectangle("fill", self.x - self.size/4, self.y - self.size/4, self.size/2, self.size/2)
+            love.graphics.rectangle("fill", 
+                self.actor.x - self.actor.radius/4, 
+                self.actor.y - self.actor.radius/4, 
+                self.actor.radius/2, 
+                self.actor.radius/2)
             love.graphics.setColor(.4 * colorTypeFactor, .4, 1., alphaValue)
             love.graphics.rectangle("fill", 
-            self.x - self.size/4, 
-            self.y - self.size/4,  
-            self.size/2, 
-            self.size/2 * (1 - self.workingProgress))
+                self.actor.x - self.actor.radius/4, 
+                self.actor.y - self.actor.radius/4,  
+                self.actor.radius/2, 
+                self.actor.radius/2 * (1 - self.workingProgress))
         end
     end)
 end
@@ -87,7 +96,7 @@ end
 function building:tryResourceToBuild(amount)
     if resourcesManager.resource > amount then
         resourcesManager.resource = resourcesManager.resource - amount
-        self.health = self.health + amount
+        self.actor.health = self.actor.health + amount
     end
 end
 
@@ -103,12 +112,12 @@ end
 
 function building:updateState(dt)
     -- Checking if health is maximum - in that case setting it to "exists"
-    if not self.exists and self.health > .99 then
+    if not self.exists and self.actor.health > .99 then
         self.exists = true
     end
 
     -- If health is below 0, it's removed.
-    if self.health < 0 then
+    if self.actor.health < 0 then
         self.dead = true
     end
 

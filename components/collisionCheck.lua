@@ -1,20 +1,19 @@
 local collisionCheck = {}
 
+units = {} -- reference to the units here
 
-function collisionCheck:resolveCollision(idx, units, x, y)
+function collisionCheck:resolveCollision(id, x, y)
 
     local isCollision = false
-    for i = 1, #units do
-        local distance2 = (x - units[i].x)^2+(y - units[i].y)^2 
-        local currentUnit = units[i]
-
+    for i = 1, #self.units do
+        
         -- simple distance check
-        if not(i == idx) and distance2 < (2*currentUnit.radius)^2 then
+        local distance2 = (x - self.units[i].actor.x)^2+(y - self.units[i].actor.y)^2 
+        if not(self.units[i].actor.id == id) and distance2 < (2*self.units[i].actor.radius)^2 then
             return true
         end
     end
     return false
-
 end
 
 return collisionCheck

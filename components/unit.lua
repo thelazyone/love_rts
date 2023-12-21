@@ -1,4 +1,6 @@
 local resourcesManager = require 'components.resourcesManager'
+local collisionCheck = require 'components.collisionCheck'
+local actor = require 'components.actor'
 
 -- This is the only kind of unit currently implemented.
 -- Trying to avoid inheritance, let's see how it goes with
@@ -11,14 +13,12 @@ function unit:new(x, y)
 
     print ("creating new unit on: ", x, ", ", y)
 
-    newObj.x = x
-    newObj.y = y
+    newObj.actor = actor:new(x, y, 10, 1)
+
     newObj.speed = 250
     newObj.targetX = x
     newObj.targetY = y
     newObj.targetObj = nil
-    newObj.radius = 10
-
     newObj.buildSpeed = .05
 
     -- Level of patience for the Unit before giving up the order
@@ -58,16 +58,16 @@ function unit:addToCanvas(canvas)
     canvas:renderTo(function()
         if self.selected then
             love.graphics.setColor(1, .5, .5, 1)
-            love.graphics.circle("fill", self.x, self.y, self.radius)
+            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
         else 
             love.graphics.setColor(1, 1, 1., 1)
-            love.graphics.circle("fill", self.x, self.y, self.radius)
+            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
         end
 
         -- if interacting adding a smaller circle
         if self.interacting then
             love.graphics.setColor(.5, .2, .2, 1)
-            love.graphics.circle("fill", self.x, self.y, self.radius/2)
+            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius/2)
         end
     end)
 end
@@ -78,7 +78,7 @@ end
 -- ##############################################
 
 function unit:hasArrived(dt, threshold)
-    local dist = (self.targetX - self.x)^2 + math.abs(self.targetY - self.y)^2
+    local dist = (self.targetX - self.actor.x)^2 + math.abs(self.targetY - self.actor.y)^2
     if dist < (threshold) ^ 2 then
         return true
     end
@@ -89,60 +89,90 @@ end
 
 function unit:calculateMovement(dt)
     -- Moving in the direction of the target
-    direction = math.atan((self.targetY - self.y) / (self.targetX - self.x))
-    if self.targetX - self.x < 0 then
+    direction = math.atan((self.targetY - self.actor.y) / (self.targetX - self.actor.x))
+    if self.targetX - self.actor.x < 0 then
         direction = direction + math.pi
     end
 
     -- Calculating the movement.
-    local nextStepX = self.x + self.speed * math.cos(direction) * dt
-    local nextStepY = self.y + self.speed * math.sin(direction) * dt
+    local nextStepX = self.actor.x + self.speed * math.cos(direction) * dt
+    local nextStepY = self.actor.y + self.speed * math.sin(direction) * dt
     return nextStepX, nextStepY
+end
+
+function unit:tryMovingTo(nextX, nextY)
+    if collisionCheck:resolveCollision(self.actor.id, nextX, nextY) then
+
+        -- Unit collided
+
+        -- -- TEMPORARLY COMMENTED OUT - it works but it might be unnecessary
+        -- -- Implementing frustration
+        -- if self.state == "moving" or self.state == "interacting" then
+        --     self.frustration = self.frustration + dt
+        --     if self.frustration > self.patience then
+        --         print("unit got frustrated!")
+        --         currentUnit:commandStop()
+        --         return false
+        --     end     
+        -- end
+
+        return false
+    else
+        -- Unit moved OK
+        self:setPos(nextX, nextY)
+        self.frustration = 0
+        return true
+    end
 end
 
 
 -- When asked, predicts the next move in xy that the unit would do.
 -- This is necessary to the rtsWorld, which then handles collisions of sort
 -- Returns a pair of x and y
-function unit:getNextMove(dt)
+function unit:move(dt)
 
     if self.state == "idle" then -- nothing to do
-        return self.x, self.y
+        return false
     elseif self.state == "moving" then
 
         -- If too close to the target, stopping.
         if self:hasArrived(dt, 10) then
             print ("stop sent from moving")
             self:commandStop()
-            return self.x, self.y
+            return false
         end
 
-        return self:calculateMovement(dt)
+        return self:tryMovingTo(self:calculateMovement(dt))
+
     elseif self.state == "following" then
         -- If a target obj exists calculating position
         if self.targetObj == nil then
             print ("stop sent from following")
             self:commandStop()
+            return false
         else
             self.targetX = self.targetObj.x 
             self.targetY = self.targetObj.y 
         end
 
-        return self:calculateMovement(dt)
+        return self:tryMovingTo(self:calculateMovement(dt))
+
     elseif self.state == "interacting" then
 
         -- If too close to the target, not moving but remain in interact.
         if self.targetObj == nil then
             print ("stop sent from interacting")
             self:commandStop()
+            return false
         elseif self:hasArrived(dt, 40) then
-            return self.x, self.y
+            return false
         end
 
-        return self:calculateMovement(dt)
+        return self:tryMovingTo(self:calculateMovement(dt))
+
     else
         print ("Warning, state is wrong: ", self.state)
-        return self.x, self.y
+        return false
     end
 end
 
@@ -153,7 +183,7 @@ function unit:interact(dt)
     if self.state == "interacting" then
         
         -- Checking if object has the right fields
-        if self.targetObj.health == nil or self.targetObj.exists == nil then
+        if self.targetObj.actor.health == nil or self.targetObj.exists == nil then
             print ("object has no proper parameters to interact with!!")
         end
 
@@ -187,8 +217,8 @@ end
 
 
 function unit:setPos(x, y)
-    self.x = x
-    self.y = y 
+    self.actor.x = x
+    self.actor.y = y 
 end
 
 
@@ -209,8 +239,8 @@ end
 
 function unit:commandInteract(obj)
     self.interacting = false -- Will get true only when reaching the target
-    self.targetX = obj.x
-    self.targetY = obj.y
+    self.targetX = obj.actor.x
+    self.targetY = obj.actor.y
     self.targetObj = obj
     print ("Sent command Interact to ", self.targetX, self.targetY,self.targetObj)
     self.state = "interacting"
