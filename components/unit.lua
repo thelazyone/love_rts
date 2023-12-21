@@ -119,7 +119,7 @@ function unit:tryMovingTo(nextX, nextY)
         return false
     else
         -- Unit moved OK
-        self:setPos(nextX, nextY)
+        self.actor:moveTo(nextX, nextY)
         self.frustration = 0
         return true
     end
@@ -216,10 +216,6 @@ function unit:interact(dt)
 end
 
 
-function unit:setPos(x, y)
-    self.actor.x = x
-    self.actor.y = y 
-end
 
 
 -- ##############################################
