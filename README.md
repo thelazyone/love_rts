@@ -15,5 +15,3 @@ Everything else should be ready to launch, with the usual LÖVE procedure.
 ## TODOs
 
 * Have units "slide" next to each other rather than getting stuck
-* Create "buildings", which have very few rules but allow for a unit to get tasked to "get" there or to "interact". or both.
-* Buildings can be squares. They must have 1-2 progress bars implemented, fairly simple ones.
