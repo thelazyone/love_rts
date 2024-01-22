@@ -53,12 +53,13 @@ function love.update(dt)
         updateDragArea(love.mouse.getPosition())
     end
 
-    -- Exit 
+    -- Exit
     if love.keyboard.isDown("escape") then
         love.event.quit()
     end
 
     world:update(dt)
+    resourcesManager:update(dt)
 end
 
 
@@ -66,11 +67,11 @@ function love.mousepressed( x, y, button, istouch, presses )
 
     if button == 1 then
         lastClickX = x
-        lastClickY = y 
+        lastClickY = y
 
         -- If no order is issued, it starts a rect drag.
         if lastButton == "none" then
-            -- Nothing here 
+            -- Nothing here
         -- If add is set, creates a new worker
         elseif lastButton == "add" then
             world:createUnit(x, y)
@@ -86,7 +87,7 @@ function love.mousepressed( x, y, button, istouch, presses )
             world:createBuilding(x, y, "extractor")
             rectangle:hideSelection()
 
-        else 
+        else
             print("Bad Button Command: ", lastButton)
         end
 
@@ -94,7 +95,7 @@ function love.mousepressed( x, y, button, istouch, presses )
     end
 
     --If right clicking, moving units to the point.
-    if button == 2 then        
+    if button == 2 then
         world:moveSelectedUnitsTo(x, y)
         lastButton = "none"
     end
@@ -118,7 +119,7 @@ function love.mousereleased( x, y, button, istouch, presses)
             lastButton = "factory"
         elseif buildExtractButton:isInside(x, y) then
             lastButton = "extractor"
-        else 
+        else
             lastButton = "none"
         end
     end
@@ -179,5 +180,7 @@ function love.draw()
     buildExtractButton:draw()
 
     -- Drawing resources
-    love.graphics.print("resource: " .. tostring(math.floor(resourcesManager.resource*100)/100) .. ", produce: " .. tostring(resourcesManager.produce), 380, 580)
+    love.graphics.print("resource: " .. tostring(math.floor(resourcesManager.resource*100)/100) .. ", produce: " .. tostring(resourcesManager.produce), 380, 520)
+    love.graphics.print("resource: " .. tostring(math.floor(resourcesManager.currentResource*100)/100), 380, 580)
+    love.graphics.print("storage: " .. tostring(resourcesManager.currentStorage), 480, 580)
 end
