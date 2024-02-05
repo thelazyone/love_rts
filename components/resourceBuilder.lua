@@ -1,5 +1,24 @@
 local builder = {}
 
+-- HOW TO USE
+-- ==========
+--
+-- The builder is an abstract concept of something that provides buildpower (and a scale variable to tune it) to another
+-- builder (and a consumer ultimately utilizes it). It can be helped by other builders, and it can help a single other
+-- builder.
+--
+-- One can add, update or remove other builders to one using the `addHelper()`, `updateHelper()` and `removeHelper()`
+-- functions. They will automatically and recursively update the buildpower of any builder chain (so that if you add a
+-- helper and we are helping someone else, it will be correctly transfered).
+--
+-- This class does NOT do any distance checks! You should only add a builder as an helper to another when it can
+-- actually help build whatever is being built; otherwise one can help building across the map which makes no sense. If
+-- the unit moves too far or stops constructing for whatever reason, you need to temporarily remove it as a helper and
+-- re-add it later. That info is yours to manage.
+--
+-- Note that constructions get assigned a default no-buildpower builder so that the GUI will be able to track it. All
+-- other builders need to help that one in order to help build the construction.
+
 -- Gets actual BP of the builder including helpers
 local function getBP(self)
     return self.buildpower * self.scale
@@ -64,12 +83,6 @@ local function removeHelper(self, otherBuilder)
 end
 
 -- Creates a new builder
---
--- This is an abstract concept of something that provides buildpower (and a scale variable to tune it).
--- It can be helped by other builders, and it can help a single other builder.
---
--- Note that constructions get assigned a default no-buildpower builder so that the GUI will be able to track it. All
--- other builders need to help that one in order to help build the construction.
 function builder:new(bp, scale)
     local b = {}
 
