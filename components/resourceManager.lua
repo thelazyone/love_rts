@@ -1,7 +1,7 @@
-local resourcesManager = {}
+local resourceManager = {}
 
-resourcesManager.produce = 0
-resourcesManager.resource = 0
+resourceManager.produce = 0
+resourceManager.resource = 0
 
 -- NEED TO REGISTER:
 --
@@ -14,15 +14,15 @@ resourcesManager.resource = 0
 -- STORAGE:
 --   - JUST NEED A getStorage() METHOD TELLING HOW MUCH THEY CAN TAKE
 
-resourcesManager.currentResource = 0
-resourcesManager.currentProduction = 0
-resourcesManager.currentStorage = 0
+resourceManager.currentResource = 0
+resourceManager.currentProduction = 0
+resourceManager.currentStorage = 0
 
-resourcesManager.producers = {}
-resourcesManager.consumers = {}
-resourcesManager.storage = {}
+resourceManager.producers = {}
+resourceManager.consumers = {}
+resourceManager.storage = {}
 
-function resourcesManager:update(dt)
+function resourceManager:update(dt)
     self.currentProduction = 0
     for k, v in pairs(self.producers) do
         self.currentProduction = self.currentProduction + v:getProduction(dt)
@@ -46,33 +46,33 @@ function resourcesManager:update(dt)
     self.currentResource = math.min(self.currentResource, self.currentStorage)
 end
 
-function resourcesManager:registerProducer(obj)
+function resourceManager:registerProducer(obj)
     self.producers[obj] = obj
 end
 
-function resourcesManager:registerConsumer(obj)
+function resourceManager:registerConsumer(obj)
     self.consumers[obj] = obj
 end
 
-function resourcesManager:registerStorage(obj)
+function resourceManager:registerStorage(obj)
     self.storage[obj] = obj
 end
 
-function resourcesManager:unregisterProducer(obj)
+function resourceManager:unregisterProducer(obj)
     self.producers[obj] = nil
 end
 
-function resourcesManager:unregisterConsumer(obj)
+function resourceManager:unregisterConsumer(obj)
     self.consumers[obj] = nil
 end
 
-function resourcesManager:unregisterStorage(obj)
+function resourceManager:unregisterStorage(obj)
     self.storage[obj] = nil
 end
 
 -- Default production
-resourcesManager:registerProducer({ getProduction = function(self, dt) return 1 * dt end })
+resourceManager:registerProducer({ getProduction = function(self, dt) return 1 * dt end })
 -- Default storage
-resourcesManager:registerStorage({ getStorage = function(self) return 10 end })
+resourceManager:registerStorage({ getStorage = function(self) return 10 end })
 
-return resourcesManager
+return resourceManager

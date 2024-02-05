@@ -1,4 +1,4 @@
-local resourcesManager = require 'components.resourcesManager'
+local resourceManager = require 'components.resourceManager'
 local actor = require 'components.actor'
 
 local building = {}
@@ -94,15 +94,15 @@ end
 
 
 function building:tryResourceToBuild(amount)
-    if resourcesManager.resource > amount then
-        resourcesManager.resource = resourcesManager.resource - amount
+    if resourceManager.resource > amount then
+        resourceManager.resource = resourceManager.resource - amount
         self.actor.health = self.actor.health + amount
     end
 end
 
 function building:tryResourceToProduce(amount)
-    if resourcesManager.resource > amount then
-        resourcesManager.resource = resourcesManager.resource - amount
+    if resourceManager.resource > amount then
+        resourceManager.resource = resourceManager.resource - amount
         self.workingProgress = self.workingProgress + amount
     else
     end
@@ -132,7 +132,7 @@ function building:updateState(dt)
         -- if production is > 1, building is done
         if self.workingProgress > 1 then
             self.workingProgress = 0
-            resourcesManager.produce = resourcesManager.produce + 1
+            resourceManager.produce = resourceManager.produce + 1
         end
 
     -- Extractor
@@ -141,7 +141,7 @@ function building:updateState(dt)
         -- produces resources.
         self.workingProgress = 1 -- square is always full
         if self.exists then
-            resourcesManager.resource = resourcesManager.resource + dt * self.productionSpeed
+            resourceManager.resource = resourceManager.resource + dt * self.productionSpeed
         end
 
     -- Error:

@@ -6,7 +6,7 @@ local renderer = require 'components.renderer'
 local rectangle = require 'components.selectionRectangle'
 renderer:initialize("resources/map.png", camera, rectangle)
 local button = require 'components.button'
-local resourcesManager = require 'components.resourcesManager'
+local resourceManager = require 'components.resourceManager'
 
 -- Mouse last click.
 local lastClickX = nil
@@ -16,7 +16,7 @@ local lastClickY = nil
 local addUnitButton = button:new(20, 540, "add unit")
 local buildThingButton = button:new(140, 540, "build factory")
 local buildExtractButton = button:new(260, 540, "build extractor")
-resourcesManager.resource = 1.5
+resourceManager.resource = 1.5
 
 -- Last Button pressed. "none" is the default.
 local lastButton = "none"
@@ -59,7 +59,7 @@ function love.update(dt)
     end
 
     world:update(dt)
-    resourcesManager:update(dt)
+    resourceManager:update(dt)
 end
 
 
@@ -180,7 +180,7 @@ function love.draw()
     buildExtractButton:draw()
 
     -- Drawing resources
-    love.graphics.print("resource: " .. tostring(math.floor(resourcesManager.resource*100)/100) .. ", produce: " .. tostring(resourcesManager.produce), 380, 520)
-    love.graphics.print("resource: " .. tostring(math.floor(resourcesManager.currentResource*100)/100), 380, 580)
-    love.graphics.print("storage: " .. tostring(resourcesManager.currentStorage), 480, 580)
+    love.graphics.print("resource: " .. tostring(math.floor(resourceManager.resource*100)/100) .. ", produce: " .. tostring(resourceManager.produce), 380, 520)
+    love.graphics.print("resource: " .. tostring(math.floor(resourceManager.currentResource*100)/100), 380, 580)
+    love.graphics.print("storage: " .. tostring(resourceManager.currentStorage), 480, 580)
 end

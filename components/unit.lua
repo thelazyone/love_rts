@@ -1,4 +1,3 @@
-local resourcesManager = require 'components.resourcesManager'
 local collisionCheck = require 'components.collisionCheck'
 local actor = require 'components.actor'
 
