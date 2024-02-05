@@ -14,7 +14,8 @@ local builder = {}
 -- This class does NOT do any distance checks! You should only add a builder as an helper to another when it can
 -- actually help build whatever is being built; otherwise one can help building across the map which makes no sense. If
 -- the unit moves too far or stops constructing for whatever reason, you need to temporarily remove it as a helper and
--- re-add it later. That info is yours to manage.
+-- re-add it later. That info is yours to manage. You can get info about what is being built by some builder by using
+-- the `getTarget()` member function.
 --
 -- Note that constructions get assigned a default no-buildpower builder so that the GUI will be able to track it. All
 -- other builders need to help that one in order to help build the construction.
@@ -82,13 +83,26 @@ local function removeHelper(self, otherBuilder)
     end
 end
 
+local function getTarget(self)
+    if self.target then
+        return self.target
+    end
+
+    if self.helping then
+        return self.helping:getTarget()
+    end
+
+    return nil
+end
+
 -- Creates a new builder
-function builder:new(bp, scale)
+function builder:new(bp, scale, target)
     local b = {}
 
     -- Base stats
     b.buildpower = bp or 0
     b.scale = scale or 1
+    b.target = target or nil
 
     -- Lists of other builders
     b.helpers = {}

@@ -61,7 +61,7 @@ function consumer:new(res, time)
 
     -- Associated builder to which all others must append so we can track shit.
     -- This one has no buildpower, the helpers will contribute allowing to actually build the building.
-    c.defaultBuilder = builder:new(c)
+    c.defaultBuilder = builder:new(0, 1, c)
 
     return c
 end
