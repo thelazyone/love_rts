@@ -1,4 +1,5 @@
 local resourceManager = require 'components.resourceManager'
+local resourceConsumer = require 'components.resourceConsumer'
 local actor = require 'components.actor'
 
 local building = {}
@@ -21,6 +22,8 @@ function building:new(x, y, buildingType)
     setmetatable(newObj, {__index = building})
 
     print("crating building with ", x, y, buildingType)
+    newObj.shade = resourceConsumer:new(1.0, 1.0)
+    resourceManager:registerConsumer(newObj.shade)
 
     return newObj
 end
@@ -114,6 +117,8 @@ function building:updateState(dt)
     -- Checking if health is maximum - in that case setting it to "exists"
     if not self.exists and self.actor.health > .99 then
         self.exists = true
+        resourceManager:unregisterConsumer(self.shade)
+        self.shade = nil
 
         if self.buildingType == "extractor" then
             self.getProduction = function(self, dt) return self.productionSpeed * dt end

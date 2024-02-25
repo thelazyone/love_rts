@@ -1,4 +1,5 @@
 local collisionCheck = require 'components.collisionCheck'
+local resourceBuilder = require 'components.resourceBuilder'
 local actor = require 'components.actor'
 
 -- This is the only kind of unit currently implemented.
@@ -40,6 +41,7 @@ function unit:new(x, y)
     --
     -- Other states might include attacking and such
     newObj.state = "idle"
+    newObj.builder = resourceBuilder:new(0.05)
 
     setmetatable(newObj, {__index = unit})
 
@@ -197,6 +199,7 @@ function unit:interact(dt)
         -- Passing resources to the object:
         -- If not built yet, building
         if not self.targetObj.exists then
+            self.targetObj.shade.defaultBuilder:addHelper(self.builder)
             self.targetObj:tryResourceToBuild(dt * self.buildSpeed)
 
         -- Otherwise help functioning
