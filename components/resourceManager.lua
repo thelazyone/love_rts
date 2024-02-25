@@ -23,7 +23,7 @@ resourceManager.resource = 0
 --     STORAGE (Allows to store more resource before overflow gets discarded):
 --       - They need a `getStorage()` method telling how much they can take.
 
-resourceManager.currentResource = 0
+resourceManager.currentResource = 1.5
 resourceManager.currentProduction = 0
 resourceManager.currentStorage = 0
 
@@ -88,7 +88,7 @@ function resourceManager:unregisterStorage(obj)
 end
 
 -- Default production
-resourceManager:registerProducer({ getProduction = function(self, dt) return 1 * dt end })
+resourceManager:registerProducer({ getProduction = function(self, dt) return 0.01 * dt end })
 -- Default storage
 resourceManager:registerStorage({ getStorage = function(self) return 10 end })
 

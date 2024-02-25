@@ -114,6 +114,11 @@ function building:updateState(dt)
     -- Checking if health is maximum - in that case setting it to "exists"
     if not self.exists and self.actor.health > .99 then
         self.exists = true
+
+        if self.buildingType == "extractor" then
+            self.getProduction = function(self, dt) return self.productionSpeed * dt end
+            resourceManager:registerProducer(self)
+        end
     end
 
     -- If health is below 0, it's removed.
