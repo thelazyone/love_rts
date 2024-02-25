@@ -1,4 +1,4 @@
-local builder = require 'components.builder'
+local builder = require 'components.resourceBuilder'
 
 local consumer = {}
 
