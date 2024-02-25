@@ -43,7 +43,7 @@ local function addHelper(self, otherBuilder)
     end
 
     if otherBuilder.helping ~= nil then
-        otherBuilder.helping:leave(otherBuilder)
+        otherBuilder.helping:removeHelper(otherBuilder)
     end
 
     self.helpers[otherBuilder] = otherBuilder
