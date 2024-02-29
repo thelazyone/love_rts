@@ -34,63 +34,6 @@ function building:isOver(x, y)
         y > self.actor.y - self.actor.radius/2 and y < self.actor.y + self.actor.radius/2
 end
 
--- ##############################################
--- Graphics
--- ##############################################
-
--- Static function. The sprite is a circle
-function building:draw()
-    -- If not built entirely, keeping it transparent
-    local alphaValue = 1
-    if not self.exists then
-        alphaValue = 0.5
-    end
-
-    if self.dead then
-        return
-    end
-
-    local colorTypeFactor = 1.
-    if self.buildingType == "factory" then
-        colorTypeFactor = 1.
-    elseif self.buildingType == "extractor" then
-        colorTypeFactor = .2
-    else
-        print ("Error, building type wrong: ", self.buildingType)
-    end
-
-    -- Drawing the building in blue-grey, with a red overlay for the uncompleted part.
-    love.graphics.setColor(.6 * colorTypeFactor, .6, 1., alphaValue)
-    love.graphics.rectangle("fill",
-        self.actor.x - self.actor.radius/2,
-        self.actor.y - self.actor.radius/2,
-        self.actor.radius,
-        self.actor.radius)
-    love.graphics.setColor(.6 * colorTypeFactor, 0, 0., alphaValue * .8)
-    love.graphics.rectangle("fill",
-        self.actor.x - self.actor.radius/2,
-        self.actor.y - self.actor.radius/2,
-        self.actor.radius,
-        self.actor.radius * (1 - self.actor.health))
-
-    -- If in working mode, adding a small darker square
-    if self.exists and self.active then
-        love.graphics.setColor(.2 * colorTypeFactor, .2, 1., alphaValue)
-        love.graphics.rectangle("fill",
-            self.actor.x - self.actor.radius/4,
-            self.actor.y - self.actor.radius/4,
-            self.actor.radius/2,
-            self.actor.radius/2)
-        love.graphics.setColor(.4 * colorTypeFactor, .4, 1., alphaValue)
-        love.graphics.rectangle("fill",
-            self.actor.x - self.actor.radius/4,
-            self.actor.y - self.actor.radius/4,
-            self.actor.radius/2,
-            self.actor.radius/2 * (1 - self.workingProgress))
-    end
-end
-
-
 function building:tryResourceToBuild(amount)
     if resourceManager.resource > amount then
         resourceManager.resource = resourceManager.resource - amount
@@ -152,6 +95,62 @@ function building:updateState(dt)
     -- Error:
     else
         print ("Wrong building type!", self.buildingType)
+    end
+end
+
+-- ##############################################
+-- Graphics
+-- ##############################################
+
+-- Static function. The sprite is a circle
+function building:draw()
+    -- If not built entirely, keeping it transparent
+    local alphaValue = 1
+    if not self.exists then
+        alphaValue = 0.5
+    end
+
+    if self.dead then
+        return
+    end
+
+    local colorTypeFactor = 1.
+    if self.buildingType == "factory" then
+        colorTypeFactor = 1.
+    elseif self.buildingType == "extractor" then
+        colorTypeFactor = .2
+    else
+        print ("Error, building type wrong: ", self.buildingType)
+    end
+
+    -- Drawing the building in blue-grey, with a red overlay for the uncompleted part.
+    love.graphics.setColor(.6 * colorTypeFactor, .6, 1., alphaValue)
+    love.graphics.rectangle("fill",
+        self.actor.x - self.actor.radius/2,
+        self.actor.y - self.actor.radius/2,
+        self.actor.radius,
+        self.actor.radius)
+    love.graphics.setColor(.6 * colorTypeFactor, 0, 0., alphaValue * .8)
+    love.graphics.rectangle("fill",
+        self.actor.x - self.actor.radius/2,
+        self.actor.y - self.actor.radius/2,
+        self.actor.radius,
+        self.actor.radius * (1 - self.actor.health))
+
+    -- If in working mode, adding a small darker square
+    if self.exists and self.active then
+        love.graphics.setColor(.2 * colorTypeFactor, .2, 1., alphaValue)
+        love.graphics.rectangle("fill",
+            self.actor.x - self.actor.radius/4,
+            self.actor.y - self.actor.radius/4,
+            self.actor.radius/2,
+            self.actor.radius/2)
+        love.graphics.setColor(.4 * colorTypeFactor, .4, 1., alphaValue)
+        love.graphics.rectangle("fill",
+            self.actor.x - self.actor.radius/4,
+            self.actor.y - self.actor.radius/4,
+            self.actor.radius/2,
+            self.actor.radius/2 * (1 - self.workingProgress))
     end
 end
 

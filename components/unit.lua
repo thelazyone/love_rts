@@ -48,29 +48,6 @@ function unit:new(x, y)
     return newObj
 end
 
-
--- ##############################################
--- Graphics
--- ##############################################
-
--- Static function. The sprite is a circle
-function unit:draw()
-    if self.selected then
-        love.graphics.setColor(1, .5, .5, 1)
-        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
-    else
-        love.graphics.setColor(1, 1, 1., 1)
-        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
-    end
-
-    -- if interacting adding a smaller circle
-    if self.interacting then
-        love.graphics.setColor(.5, .2, .2, 1)
-        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius/2)
-    end
-end
-
-
 -- ##############################################
 -- Logic
 -- ##############################################
@@ -83,7 +60,6 @@ function unit:hasArrived(dt, threshold)
 
     return false
 end
-
 
 function unit:calculateMovement(dt)
     -- Moving in the direction of the target
@@ -122,7 +98,6 @@ function unit:tryMovingTo(nextX, nextY)
         return true
     end
 end
-
 
 -- When asked, predicts the next move in xy that the unit would do.
 -- This is necessary to the rtsWorld, which then handles collisions of sort
@@ -174,7 +149,6 @@ function unit:move(dt)
     end
 end
 
-
 function unit:interact(dt)
 
     -- Checking if there's anything to interact to and if the state is right.
@@ -214,9 +188,6 @@ function unit:interact(dt)
     end
 end
 
-
-
-
 -- ##############################################
 -- State Machine Methods
 -- This should handle potential forbidden state changes.
@@ -247,6 +218,27 @@ function unit:commandStop()
     self.interacting = false
     self.targetObj = nil
     self.state = "idle"
+end
+
+-- ##############################################
+-- Graphics
+-- ##############################################
+
+-- Static function. The sprite is a circle
+function unit:draw()
+    if self.selected then
+        love.graphics.setColor(1, .5, .5, 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
+    else
+        love.graphics.setColor(1, 1, 1., 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
+    end
+
+    -- if interacting adding a smaller circle
+    if self.interacting then
+        love.graphics.setColor(.5, .2, .2, 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius/2)
+    end
 end
 
 return unit
