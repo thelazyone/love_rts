@@ -32,7 +32,7 @@ local function setScale(self, scale)
     self.scale = scale
 
     if self.helping then
-        self.helping:update(self, self:getBP() - oldBP)
+        self.helping:updateHelper(self, self:getBP() - oldBP)
     end
 end
 
@@ -62,7 +62,7 @@ local function updateHelper(self, otherBuilder, bp)
     self.buildpower = self.buildpower + bp
 
     if self.helping then
-        self.helping:update(self, self:getBP() - oldBP)
+        self.helping:updateHelper(self, self:getBP() - oldBP)
     end
 end
 
@@ -79,7 +79,7 @@ local function removeHelper(self, otherBuilder)
     self.buildpower = self.buildpower - otherBuilder:getBP()
 
     if self.helping then
-        self.helping:update(self, self:getBP() - oldBP)
+        self.helping:updateHelper(self, self:getBP() - oldBP)
     end
 end
 
