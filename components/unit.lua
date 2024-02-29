@@ -161,6 +161,9 @@ function unit:interact(dt)
 
         -- Checking if in range:
         if not self:hasArrived(dt, 50) then
+            if self.builder.helping then
+                self.builder.helping:removeHelper(self.builder)
+            end
             return
         end
 
@@ -184,6 +187,10 @@ function unit:interact(dt)
             if self.targetObj.buildingType == "factory" then
                 self.targetObj:tryResourceToProduce(dt * self.buildSpeed)
             end
+        end
+    else
+        if self.builder.helping then
+            self.builder.helping:removeHelper(self.builder)
         end
     end
 end
