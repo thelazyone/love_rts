@@ -88,7 +88,7 @@ local function removeAllHelpers(self)
 
     for otherBuilder in self.helpers do
         if self.helpers[otherBuilder] == nil then
-            goto ::next::
+            goto next
         end
 
         self.helpers[otherBuilder] = nil
