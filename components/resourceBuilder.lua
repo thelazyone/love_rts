@@ -83,6 +83,27 @@ local function removeHelper(self, otherBuilder)
     end
 end
 
+local function removeAllHelpers(self)
+    local oldBP = self:getBP()
+
+    for otherBuilder in self.helpers do
+        if self.helpers[otherBuilder] == nil then
+            goto ::next::
+        end
+
+        self.helpers[otherBuilder] = nil
+        otherBuilder.helping = nil
+
+        self.buildpower = self.buildpower - otherBuilder:getBP()
+        ::next::
+    end
+
+    local diff = self:getBP() - oldBP
+    if self.helping and math.abs(diff) > 0 then
+        self.helping:updateHelper(self, diff)
+    end
+end
+
 local function getTarget(self)
     if self.target then
         return self.target
@@ -114,6 +135,7 @@ function builder:new(bp, scale, target)
     b.addHelper = addHelper
     b.updateHelper = updateHelper
     b.removeHelper = removeHelper
+    b.removeAllHelpers = removeAllHelpers
 
     return b
 end
