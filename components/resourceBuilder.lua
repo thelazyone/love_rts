@@ -86,7 +86,7 @@ end
 local function unregisterAllHelpers(self)
     local oldBP = self:getBP()
 
-    for otherBuilder in self.helpers do
+    for otherBuilder, _ in pairs(self.helpers) do
         if self.helpers[otherBuilder] == nil then
             goto next
         end
