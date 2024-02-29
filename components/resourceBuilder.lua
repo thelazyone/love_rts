@@ -7,14 +7,14 @@ local builder = {}
 -- builder (and a consumer ultimately utilizes it). It can be helped by other builders, and it can help a single other
 -- builder.
 --
--- One can add, update or remove other builders to one using the `addHelper()`, `updateHelper()` and `removeHelper()`
--- functions. They will automatically and recursively update the buildpower of any builder chain (so that if you add a
+-- One can add, update or remove other builders to one using the `registerHelper()`, `updateHelper()` and `unregisterHelper()`
+-- functions. They will automatically and recursively update the buildpower of any builder chain (so that if you register a
 -- helper and we are helping someone else, it will be correctly transfered).
 --
--- This class does NOT do any distance checks! You should only add a builder as an helper to another when it can
+-- This class does NOT do any distance checks! You should only register a builder as an helper to another when it can
 -- actually help build whatever is being built; otherwise one can help building across the map which makes no sense. If
--- the unit moves too far or stops constructing for whatever reason, you need to temporarily remove it as a helper and
--- re-add it later. That info is yours to manage. You can get info about what is being built by some builder by using
+-- the unit moves too far or stops constructing for whatever reason, you need to temporarily unregister it as a helper and
+-- re-register it later. That info is yours to manage. You can get info about what is being built by some builder by using
 -- the `getTarget()` member function.
 --
 -- Note that constructions get assigned a default no-buildpower builder so that the GUI will be able to track it. All
@@ -36,14 +36,14 @@ local function setScale(self, scale)
     end
 end
 
--- Adds a builder to help this one
-local function addHelper(self, otherBuilder)
+-- Registers a builder to help this one
+local function registerHelper(self, otherBuilder)
     if self.helpers[otherBuilder] ~= nil then
         return
     end
 
     if otherBuilder.helping ~= nil then
-        otherBuilder.helping:removeHelper(otherBuilder)
+        otherBuilder.helping:unregisterHelper(otherBuilder)
     end
 
     self.helpers[otherBuilder] = otherBuilder
@@ -66,8 +66,8 @@ local function updateHelper(self, otherBuilder, bp)
     end
 end
 
--- Removes a builder from the helpers
-local function removeHelper(self, otherBuilder)
+-- Unregisters a builder from the helpers
+local function unregisterHelper(self, otherBuilder)
     if self.helpers[otherBuilder] == nil then
         return
     end
@@ -83,7 +83,7 @@ local function removeHelper(self, otherBuilder)
     end
 end
 
-local function removeAllHelpers(self)
+local function unregisterAllHelpers(self)
     local oldBP = self:getBP()
 
     for otherBuilder in self.helpers do
@@ -132,10 +132,10 @@ function builder:new(bp, scale, target)
     -- Methods
     b.getBP = getBP
     b.setScale = setScale
-    b.addHelper = addHelper
+    b.registerHelper = registerHelper
     b.updateHelper = updateHelper
-    b.removeHelper = removeHelper
-    b.removeAllHelpers = removeAllHelpers
+    b.unregisterHelper = unregisterHelper
+    b.unregisterAllHelpers = unregisterAllHelpers
 
     return b
 end

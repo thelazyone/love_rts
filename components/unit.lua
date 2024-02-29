@@ -173,7 +173,7 @@ function unit:interact(dt)
         -- Passing resources to the object:
         -- If not built yet, building
         if not self.targetObj.exists then
-            self.targetObj.shade.defaultBuilder:addHelper(self.builder)
+            self.targetObj.shade.defaultBuilder:registerHelper(self.builder)
             self.targetObj:tryResourceToBuild(dt * self.buildSpeed)
 
         -- Otherwise help functioning
@@ -190,7 +190,7 @@ function unit:interact(dt)
         end
     else
         if self.builder.helping then
-            self.builder.helping:removeHelper(self.builder)
+            self.builder.helping:unregisterHelper(self.builder)
         end
     end
 end
