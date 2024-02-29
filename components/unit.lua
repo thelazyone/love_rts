@@ -54,23 +54,20 @@ end
 -- ##############################################
 
 -- Static function. The sprite is a circle
-function unit:addToCanvas(canvas)
-    -- Drawing the circle.
-    canvas:renderTo(function()
-        if self.selected then
-            love.graphics.setColor(1, .5, .5, 1)
-            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
-        else 
-            love.graphics.setColor(1, 1, 1., 1)
-            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
-        end
+function unit:draw()
+    if self.selected then
+        love.graphics.setColor(1, .5, .5, 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
+    else
+        love.graphics.setColor(1, 1, 1., 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius)
+    end
 
-        -- if interacting adding a smaller circle
-        if self.interacting then
-            love.graphics.setColor(.5, .2, .2, 1)
-            love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius/2)
-        end
-    end)
+    -- if interacting adding a smaller circle
+    if self.interacting then
+        love.graphics.setColor(.5, .2, .2, 1)
+        love.graphics.circle("fill", self.actor.x, self.actor.y, self.actor.radius/2)
+    end
 end
 
 
@@ -114,7 +111,7 @@ function unit:tryMovingTo(nextX, nextY)
         --         print("unit got frustrated!")
         --         currentUnit:commandStop()
         --         return false
-        --     end     
+        --     end
         -- end
 
         return false
@@ -152,8 +149,8 @@ function unit:move(dt)
             self:commandStop()
             return false
         else
-            self.targetX = self.targetObj.x 
-            self.targetY = self.targetObj.y 
+            self.targetX = self.targetObj.x
+            self.targetY = self.targetObj.y
         end
 
         return self:tryMovingTo(self:calculateMovement(dt))
@@ -182,7 +179,7 @@ function unit:interact(dt)
 
     -- Checking if there's anything to interact to and if the state is right.
     if self.state == "interacting" then
-        
+
         -- Checking if object has the right fields
         if self.targetObj.actor.health == nil or self.targetObj.exists == nil then
             print ("object has no proper parameters to interact with!!")
@@ -193,7 +190,7 @@ function unit:interact(dt)
             return
         end
 
-        -- Showing the interaction 
+        -- Showing the interaction
         self.interacting = true
 
         -- Passing resources to the object:
@@ -203,7 +200,7 @@ function unit:interact(dt)
             self.targetObj:tryResourceToBuild(dt * self.buildSpeed)
 
         -- Otherwise help functioning
-        else 
+        else
             -- If extractor, nothing to do.
             if self.targetObj.buildingType == "extractor" then
                 return
@@ -250,6 +247,6 @@ function unit:commandStop()
     self.interacting = false
     self.targetObj = nil
     self.state = "idle"
-end 
+end
 
-return unit 
+return unit

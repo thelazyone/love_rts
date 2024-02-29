@@ -4,25 +4,14 @@ local map = {}
 
 -- Creates the new rts map, given size and base image.
 -- Make sure that the image is wider than the w and h
-function map:new(image)
-
+function map:new(imagePath)
     local newObj = {}
 
-    newObj.w = image:getWidth()
-    newObj.h = image:getHeight()
-    newObj.image = image 
-
-    setmetatable(newObj, {__index = map})
+    newObj.image = love.graphics.newImage(imagePath)
+    newObj.w = newObj.image:getWidth()
+    newObj.h = newObj.image:getHeight()
 
     return newObj
 end
 
--- Returns the image of the map at the current centering.
-function map:getImage()
-    return self.image
-end
-
 return map
-
-
-

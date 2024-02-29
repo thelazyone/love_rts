@@ -46,18 +46,15 @@ function rectangle:selectUnits(units)
 end
 
 -- Updates the provided canvas with the rectangle.
-function rectangle:addToCanvas(canvas)
-    if self.isSelectionVisible then 
-        -- Drawing the circle.
-        canvas:renderTo(function()
-            love.graphics.setColor(1, 0, 0., 0.1)
-            love.graphics.rectangle("fill", self.selStartX, self.selStartY, self.selW, self.selH)
-            love.graphics.setColor(1, 0, 0., 1)
-            love.graphics.rectangle("line", self.selStartX, self.selStartY, self.selW, self.selH)
-            love.graphics.setColor(1, 1, 1., 1)
-        end)
+function rectangle:draw()
+    if not self.isSelectionVisible then
+        return
     end
-end
 
+    love.graphics.setColor(1, 0, 0, 0.1)
+    love.graphics.rectangle("fill", self.selStartX, self.selStartY, self.selW, self.selH)
+    love.graphics.setColor(1, 0, 0., 1)
+    love.graphics.rectangle("line", self.selStartX, self.selStartY, self.selW, self.selH)
+end
 
 return rectangle

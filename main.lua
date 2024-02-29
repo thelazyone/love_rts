@@ -4,7 +4,6 @@ local world = require 'components.world'
 local camera = require 'components.camera'
 local renderer = require 'components.renderer'
 local rectangle = require 'components.selectionRectangle'
-renderer:initialize("resources/map.png", camera, rectangle)
 local button = require 'components.button'
 local resourceManager = require 'components.resourceManager'
 
@@ -22,7 +21,7 @@ resourceManager.resource = 1.5
 local lastButton = "none"
 
 function love.load()
-    -- Nothing to do here
+    renderer:initialize("resources/map.png", camera, rectangle)
 end
 
 -- Controls
@@ -155,9 +154,8 @@ end
 
 -- Final Drawing
 function love.draw()
-
     -- Drawing the world
-    love.graphics.draw(renderer:getImage(world.units, world.buildings))
+    renderer:draw(world.units, world.buildings)
 
     -- The buttons should be elsewhere, these are temporary.
     -- Checking button pressed logic:
