@@ -17,7 +17,6 @@ end
 -- Returns a cropped image combining together all the elements (units and buildings) for the scene
 function renderer:draw(units, buildings)
     love.graphics.setCanvas(self.canvas)
-    love.graphics.translate(self.camera.offsetX, self.camera.offsetY)
 
     -- Adding the background map.
     love.graphics.setColor(1, 1, 1, 1)
@@ -39,7 +38,10 @@ function renderer:draw(units, buildings)
     love.graphics.setCanvas()
 
     love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.push()
+    love.graphics.translate(self.camera.offsetX, self.camera.offsetY)
     love.graphics.draw(self.canvas)
+    love.graphics.pop()
 end
 
 return renderer
