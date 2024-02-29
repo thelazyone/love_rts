@@ -142,6 +142,9 @@ end
 
 
 function updateDragArea(x, y)
+    if not lastClickX or not lastClickY then
+        return
+    end
     local rectThreshold = 2
     local distance = math.abs(lastClickX - x) + math.abs(lastClickY - y)
     if love.mouse.isDown(1) and distance > rectThreshold then
