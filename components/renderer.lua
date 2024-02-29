@@ -36,19 +36,6 @@ function renderer:draw(units, buildings)
     -- Showing the rectangle on top of the units:
     self.rectangle:draw()
 
-    -- -- overriding the visible world content with the world image, shifted.
-    -- love.graphics.setColor(1, 1, 1, 1)
-    -- local allWorld = self.canvas:newImageData()
-    -- local visibleWorld = love.image.newImageData(self.screenW, self.screenH)
-    -- visibleWorld:paste(
-    --     allWorld,
-    --     self.camera.offsetX,
-    --     self.camera.offsetY,
-    --     0,
-    --     0,
-    --     self.map.w,
-    --     self.map.h)
-
     love.graphics.setCanvas()
 
     love.graphics.setColor(1, 1, 1, 1)
