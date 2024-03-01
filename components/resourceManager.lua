@@ -40,13 +40,20 @@ function resourceManager:update(dt)
     end
     self.currentResource = self.currentResource + self.currentProduction
 
+    -- Compute total theoretical costs
+    local totalCosts = 0 -- just in case
+    for k, v in pairs(self.consumers) do
+        totalCosts = totalCosts + v:tickCost(dt)
+    end
+
+    -- Note that this is different from actually scaling the builders; this is forced by physical limitations (not
+    -- enough resources for everybody)
+    local forcedRatio = math.min(1.0, self.currentResource / totalCosts)
+
     -- Consume what can be consumed.
     local costs = 0 -- just in case
     for k, v in pairs(self.consumers) do
-        -- FIXME: would actually need to check total cost first, and if greater than what is available scale all
-        -- constructors back (depending on priority) so that everything keeps building at once and not depending on
-        -- order.
-        local cost = math.min(v:tickCost(dt), self.currentResource)
+        local cost = forcedRatio * v:tickCost(dt)
         v:construct(cost)
 
         costs = costs + cost
