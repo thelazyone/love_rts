@@ -41,7 +41,7 @@ function unit:new(x, y)
     --
     -- Other states might include attacking and such
     newObj.state = "idle"
-    newObj.builder = resourceBuilder:new(0.05)
+    newObj.builder = resourceBuilder:new(0.25)
 
     setmetatable(newObj, {__index = unit})
 
@@ -174,8 +174,6 @@ function unit:interact(dt)
         -- If not built yet, building
         if not self.targetObj.exists then
             self.targetObj.shade.defaultBuilder:registerHelper(self.builder)
-            self.targetObj:tryResourceToBuild(dt * self.buildSpeed)
-
         -- Otherwise help functioning
         else
             -- If extractor, nothing to do.
@@ -185,7 +183,7 @@ function unit:interact(dt)
 
             -- If Factory, helping to produce.
             if self.targetObj.buildingType == "factory" then
-                self.targetObj:tryResourceToProduce(dt * self.buildSpeed)
+                self.targetObj.assemblyLine.defaultBuilder:registerHelper(self.builder)
             end
         end
     else

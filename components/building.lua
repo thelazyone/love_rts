@@ -4,6 +4,10 @@ local actor = require 'components.actor'
 
 local building = {}
 
+-- Enum
+local Factory = "factory"
+local Extractor = "extractor"
+
 function building:new(x, y, buildingType)
     local newObj  = {}
 
@@ -16,8 +20,11 @@ function building:new(x, y, buildingType)
 
     -- Working logic
     newObj.active = true
-    newObj.workingProgress = 0      -- between 0 and 1, arbitrary construction progress
-    newObj.productionSpeed = 0.1
+    -- newObj.workingProgress = 0      -- between 0 and 1, arbitrary construction progress
+
+    if buildingType == Extractor then
+        newObj.productionSpeed = 0.1
+    end
 
     setmetatable(newObj, {__index = building})
 
@@ -34,34 +41,54 @@ function building:isOver(x, y)
         y > self.actor.y - self.actor.radius/2 and y < self.actor.y + self.actor.radius/2
 end
 
-function building:tryResourceToBuild(amount)
-    if resourceManager.resource > amount then
-        resourceManager.resource = resourceManager.resource - amount
-        self.actor.health = self.actor.health + amount
-    end
-end
-
-function building:tryResourceToProduce(amount)
-    if resourceManager.resource > amount then
-        resourceManager.resource = resourceManager.resource - amount
-        self.workingProgress = self.workingProgress + amount
-    else
-    end
-
-end
-
+-- function building:tryResourceToBuild(amount)
+--     if resourceManager.resource > amount then
+--         resourceManager.resource = resourceManager.resource - amount
+--         self.actor.health = self.actor.health + amount
+--     end
+-- end
+--
+-- function building:tryResourceToProduce(amount)
+--     if resourceManager.resource > amount then
+--         resourceManager.resource = resourceManager.resource - amount
+--         self.workingProgress = self.workingProgress + amount
+--     else
+--     end
+--
+-- end
 
 function building:updateState(dt)
     -- Checking if health is maximum - in that case setting it to "exists"
-    if not self.exists and self.actor.health > .99 then
-        self.exists = true
-        resourceManager:unregisterConsumer(self.shade)
-        self.shade = nil
+    if not self.exists then
+        if self.shade.built <= .99 then
+            self.actor.health = self.shade.built
+            return
+        end
 
-        if self.buildingType == "extractor" then
+        self.exists = true
+        -- Probably need a way in consumer to link built to some weighted property
+        self.actor.health = 1
+
+        if self.buildingType == Extractor then
+            resourceManager:unregisterConsumer(self.shade)
+            self.shade = nil
+
             self.getProduction = function(self, dt) return self.productionSpeed * dt end
             resourceManager:registerProducer(self)
+
+            self.workingProgress = 1 -- square is always full
+        elseif self.buildingType == Factory then
+            -- Change name, so we keep all helper builders registered
+            self.assemblyLine = self.shade
+            self.shade = nil
+
+            -- TODO: change price/time cost of production, not that important atm
+
+            -- Reset build status
+            self.assemblyLine.built = 0
+            self.workingProgress = 0 -- Again need to decide a way to link values (pass dict + key usually works)
         end
+        return
     end
 
     -- If health is below 0, it's removed.
@@ -70,27 +97,16 @@ function building:updateState(dt)
     end
 
     -- Factory:
-    if self.buildingType == "factory" then
-
-        -- building if possible
-        if self.exists then
-            self:tryResourceToProduce(dt * self.productionSpeed)
-        end
-
+    if self.buildingType == Factory then
         -- if production is > 1, building is done
-        if self.workingProgress > 1 then
-            self.workingProgress = 0
+        if self.assemblyLine.built >= 1 then
+            self.assemblyLine.built = 0
             resourceManager.produce = resourceManager.produce + 1
         end
+        self.workingProgress = self.assemblyLine.built
 
     -- Extractor
-    elseif self.buildingType == "extractor" then
-
-        -- produces resources.
-        self.workingProgress = 1 -- square is always full
-        if self.exists then
-            resourceManager.resource = resourceManager.resource + dt * self.productionSpeed
-        end
+    elseif self.buildingType == Extractor then
 
     -- Error:
     else
@@ -115,9 +131,9 @@ function building:draw()
     end
 
     local colorTypeFactor = 1.
-    if self.buildingType == "factory" then
+    if self.buildingType == Factory then
         colorTypeFactor = 1.
-    elseif self.buildingType == "extractor" then
+    elseif self.buildingType == Extractor then
         colorTypeFactor = .2
     else
         print ("Error, building type wrong: ", self.buildingType)

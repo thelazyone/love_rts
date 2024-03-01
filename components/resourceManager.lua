@@ -81,6 +81,7 @@ end
 
 function resourceManager:unregisterConsumer(obj)
     self.consumers[obj] = nil
+    obj.defaultBuilder:unregisterAllHelpers()
 end
 
 function resourceManager:unregisterStorage(obj)
