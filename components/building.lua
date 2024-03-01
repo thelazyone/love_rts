@@ -20,7 +20,6 @@ function building:new(x, y, buildingType)
 
     -- Working logic
     newObj.active = true
-    -- newObj.workingProgress = 0      -- between 0 and 1, arbitrary construction progress
 
     if buildingType == Extractor then
         newObj.productionSpeed = 0.1
@@ -40,22 +39,6 @@ function building:isOver(x, y)
         x > self.actor.x - self.actor.radius/2 and x < self.actor.x + self.actor.radius/2 and
         y > self.actor.y - self.actor.radius/2 and y < self.actor.y + self.actor.radius/2
 end
-
--- function building:tryResourceToBuild(amount)
---     if resourceManager.resource > amount then
---         resourceManager.resource = resourceManager.resource - amount
---         self.actor.health = self.actor.health + amount
---     end
--- end
---
--- function building:tryResourceToProduce(amount)
---     if resourceManager.resource > amount then
---         resourceManager.resource = resourceManager.resource - amount
---         self.workingProgress = self.workingProgress + amount
---     else
---     end
---
--- end
 
 function building:updateState(dt)
     -- Checking if health is maximum - in that case setting it to "exists"
