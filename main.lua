@@ -4,8 +4,9 @@ local world = require 'components.world'
 local camera = require 'components.camera'
 local renderer = require 'components.renderer'
 local rectangle = require 'components.selectionRectangle'
-local button = require 'components.button'
+local button = require 'components.gui.button'
 local resourceManager = require 'components.resourceManager'
+local gui = require 'components.gui'
 
 -- Mouse last click.
 local lastClickX = nil
@@ -16,12 +17,16 @@ local addUnitButton = button:new(20, 540, "add unit")
 local buildThingButton = button:new(140, 540, "build factory")
 local buildExtractButton = button:new(260, 540, "build extractor")
 resourceManager.resource = 1.5
+ggui = {}
 
 -- Last Button pressed. "none" is the default.
 local lastButton = "none"
 
 function love.load()
+    love.window.setMode(800, 600, { resizable = false })
+
     renderer:initialize("resources/map.png", camera, rectangle)
+    ggui = gui:new(love.graphics.getWidth(), love.graphics.getHeight())
 end
 
 -- Controls

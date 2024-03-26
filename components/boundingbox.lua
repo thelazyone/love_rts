@@ -1,6 +1,6 @@
 local bbox = {}
 
-local geo = require 'geometry'
+local geo = require 'components.geometry'
 
 -- Returns a bounding box that contains the original one, rotated.
 function bbox:rot(q, rot)
