@@ -1,8 +1,8 @@
 local pbar = {}
 
-local geo = require 'geometry'
-local box = require 'bbox'
-local colors = require 'colors'
+local geo = require 'components.geometry'
+local box = require 'components.boundingbox'
+local colors = require 'components.colors'
 
 local function draw(self)
     love.graphics.setColor(colors.white)
