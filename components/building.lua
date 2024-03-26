@@ -22,13 +22,13 @@ function building:new(x, y, buildingType)
     newObj.active = true
 
     if buildingType == Extractor then
-        newObj.productionSpeed = 0.1
+        newObj.productionSpeed = 10
     end
 
     setmetatable(newObj, {__index = building})
 
     print("crating building with ", x, y, buildingType)
-    newObj.shade = resourceConsumer:new(1.0, 1.0)
+    newObj.shade = resourceConsumer:new(100, 1.0)
     resourceManager:registerConsumer(newObj.shade)
 
     return newObj

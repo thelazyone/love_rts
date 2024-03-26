@@ -19,7 +19,6 @@ function unit:new(x, y)
     newObj.targetX = x
     newObj.targetY = y
     newObj.targetObj = nil
-    newObj.buildSpeed = .05
 
     -- Level of patience for the Unit before giving up the order
     -- in case of collisions
@@ -41,7 +40,7 @@ function unit:new(x, y)
     --
     -- Other states might include attacking and such
     newObj.state = "idle"
-    newObj.builder = resourceBuilder:new(0.25)
+    newObj.builder = resourceBuilder:new(25)
 
     setmetatable(newObj, {__index = unit})
 

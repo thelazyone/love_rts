@@ -26,7 +26,7 @@ local consumer = {}
 
 -- Computes the resources we could actually consume this turn.
 local function tickCost(self, dt)
-    local step = math.min((self.defaultBuilder:getBP() * dt) / self.timeCost, 1.0 - self.built)
+    local step = math.min((self.defaultBuilder:getBP() * dt) / (100 * self.timeCost), 1.0 - self.built)
 
     return self.resCost * step
 end

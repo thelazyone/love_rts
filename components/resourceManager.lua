@@ -20,8 +20,9 @@ local resourceManager = {}
 --     STORAGE (Allows to store more resource before overflow gets discarded):
 --       - They need a `getStorage()` method telling how much they can take.
 
-resourceManager.currentResource = 1.5
+resourceManager.currentResource = 150
 resourceManager.currentProduction = 0
+resourceManager.currentConsumption = 0
 resourceManager.currentStorage = 0
 
 resourceManager.producers = {}
@@ -38,14 +39,15 @@ function resourceManager:update(dt)
     self.currentResource = self.currentResource + self.currentProduction
 
     -- Compute total theoretical costs
-    local totalCosts = 0 -- just in case
+    self.currentConsumption = 0 -- just in case
     for k, v in pairs(self.consumers) do
-        totalCosts = totalCosts + v:tickCost(dt)
+        self.currentConsumption = self.currentConsumption + v:tickCost(dt)
     end
 
     -- Note that this is different from actually scaling the builders; this is forced by physical limitations (not
     -- enough resources for everybody)
-    local forcedRatio = math.min(1.0, self.currentResource / totalCosts)
+    local forcedRatio = math.min(1.0, self.currentResource / self.currentConsumption)
+    self.currentConsumption = self.currentConsumption * forcedRatio
 
     -- Consume what can be consumed.
     local costs = 0 -- just in case
@@ -93,8 +95,8 @@ function resourceManager:unregisterStorage(obj)
 end
 
 -- Default production
-resourceManager:registerProducer({ getProduction = function(self, dt) return 0.01 * dt end })
+resourceManager:registerProducer({ getProduction = function(self, dt) return 1 * dt end })
 -- Default storage
-resourceManager:registerStorage({ getStorage = function(self) return 10 end })
+resourceManager:registerStorage({ getStorage = function(self) return 1000 end })
 
 return resourceManager

@@ -64,6 +64,7 @@ function love.update(dt)
 
     world:update(dt)
     resourceManager:update(dt)
+    gui:update(dt)
 end
 
 
