@@ -181,7 +181,6 @@ function love.draw()
     buildExtractButton:draw()
 
     -- Drawing resources
-    love.graphics.print("resource: " .. tostring(math.floor(resourceManager.resource*100)/100) .. ", produce: " .. tostring(resourceManager.produce), 380, 520)
     love.graphics.print("resource: " .. string.format('%.2f', math.floor(resourceManager.currentResource*100)/100), 380, 580)
     love.graphics.print("storage: " .. tostring(resourceManager.currentStorage), 480, 580)
 end

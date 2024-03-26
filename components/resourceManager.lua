@@ -1,8 +1,5 @@
 local resourceManager = {}
 
-resourceManager.produce = 0
-resourceManager.resource = 0
-
 -- HOW TO USE
 -- ==========
 --
