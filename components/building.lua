@@ -84,7 +84,7 @@ function building:updateState(dt)
         -- if production is > 1, building is done
         if self.assemblyLine.built >= 1 then
             self.assemblyLine.built = 0
-            resourceManager.produce = resourceManager.produce + 1
+            -- Produce something..
         end
         self.workingProgress = self.assemblyLine.built
 
