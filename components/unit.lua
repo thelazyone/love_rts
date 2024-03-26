@@ -162,7 +162,7 @@ function unit:interact(dt)
         -- Checking if in range:
         if not self:hasArrived(dt, 50) then
             if self.builder.helping then
-                self.builder.helping:removeHelper(self.builder)
+                self.builder.helping:unregisterHelper(self.builder)
             end
             return
         end
